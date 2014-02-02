@@ -21,8 +21,11 @@
 	#include "oop.h"
 
 	CLASS("OO_PDW")
-		PUBLIC FUNCTION("array","constructor") { 
-			if !(isClass(configFile >> "cfgPatches" >> "inidbi")) exitwith { hint "PDW: requires INIDBI"; diag_log "PDW: requires INIDBI"};
+		PUBLIC FUNCTION("","constructor") { 
+			if !(isClass(configFile >> "cfgPatches" >> "inidbi")) exitwith { 
+				hint "PDW: requires INIDBI"; 
+				diag_log "PDW: requires INIDBI";
+			};
 			[] call compilefinal preProcessFile "\inidbi\init.sqf";
 		};	
 
