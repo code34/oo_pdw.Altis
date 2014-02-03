@@ -80,9 +80,10 @@
 
 		PUBLIC FUNCTION("object","LoadPlayer") {
 			private ["_temp", "_DB"];
-			MEMBER("RemoveAll", _this);
-
 			_DB = format ["%1", getplayeruid _this];
+			if!(_DB call iniDB_exists) exitwith {false;};
+
+			MEMBER("RemoveAll", _this);
 
 			_temp = [_DB, "inventory", "position","ARRAY"] call iniDB_read;
 			_this setposatl _temp;
@@ -167,6 +168,7 @@
 				_this additem _x;
 				_this assignItem _x;
 			} foreach _temp;
+			true;
 		};
 
 		PUBLIC FUNCTION("array","deconstructor") { };
