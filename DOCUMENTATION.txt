@@ -2,7 +2,7 @@
 	Author: code34 nicolas_boiteux@yahoo.fr
 	Copyright (C) 2013 Nicolas BOITEUX
 
-	OO PDW -  Pesistent Data World
+	CLASS OO_PDW -  Pesistent Data World
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
