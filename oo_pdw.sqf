@@ -53,121 +53,120 @@
 		};
 
 		PUBLIC FUNCTION("object","SavePlayer") {
-			private ["_DB", "_result"];
+			private ["_DB", "_result", "_array"];
 			_DB = format ["%1", getplayeruid _this];
-			_result = [_DB, "inventory", "HEADGEAR", (headgear _this)] call iniDB_write;
-			_result = [_DB, "inventory", "GOGGLES", (goggles _this)] call iniDB_write;
-			_result = [_DB, "inventory", "UNIFORM", (uniform _this)] call iniDB_write;
-			_result = [_DB, "inventory", "UNIFORMITEMS", (UniformItems _this)] call iniDB_write;
-			_result = [_DB, "inventory", "VEST", (vest _this)] call iniDB_write;
-			_result = [_DB, "inventory", "VESTITEMS", (VestItems _this)] call iniDB_write;
-			_result = [_DB, "inventory", "BACKPACK",  (backpack _this)] call iniDB_write;
-			_result = [_DB, "inventory", "BACKPACKITEMS", (backpackItems _this)] call iniDB_write;
-			_result = [_DB, "inventory", "WEAPON", (primaryWeapon _this)] call iniDB_write;
-			_result = [_DB, "inventory", "WEAPONMAGAZINES", (primaryWeaponMagazine _this)] call iniDB_write;
-			_result = [_DB, "inventory", "WEAPONITEMS", (primaryWeaponItems _this)] call iniDB_write;
-			_result = [_DB, "inventory", "SECONDARYWEAPON", (secondaryWeapon _this)] call iniDB_write;
-			_result = [_DB, "inventory", "SECONDARYWEAPONITEMS", (secondaryWeaponItems _this)] call iniDB_write;
-			_result = [_DB, "inventory", "SECONDARYWEAPONMAGAZINES", (secondaryWeaponMagazine _this)] call iniDB_write;
-			_result = [_DB, "inventory", "HANDGUNWEAPON", (handgunWeapon _this)] call iniDB_write;
-			_result = [_DB, "inventory", "HANDGUNWEAPONITEMS", (handgunItems _this)] call iniDB_write;
-			_result = [_DB, "inventory", "HANDGUNWEAPONMAGAZINES", (handgunMagazine _this)] call iniDB_write;
-			_result = [_DB, "inventory", "ITEMS", (assignedItems _this)] call iniDB_write;
-			_result = [_DB, "inventory", "position", getposatl _this] call iniDB_write;
-			_result = [_DB, "inventory", "damage", damage _this] call iniDB_write;
-			_result = [_DB, "inventory", "dir", getdir _this] call iniDB_write;
+			_array = [
+				(headgear _this), 
+				(goggles _this), 
+				(uniform _this), 
+				(UniformItems _this), 
+				(vest _this), 
+				(VestItems _this), 
+				(backpack _this), 
+				(backpackItems _this), 
+				(primaryWeapon _this), 
+				(primaryWeaponItems _this),
+				(primaryWeaponMagazine _this),
+				(secondaryWeapon _this),
+				(secondaryWeaponItems _this),
+				(secondaryWeaponMagazine _this),
+				(handgunWeapon _this),
+				(handgunItems _this),
+				(handgunMagazine _this),
+				(assignedItems _this),
+				(getposatl _this),
+				(damage _this),
+				(getdir _this)
+			];
+			_result = [_DB, "player", "inventory", _array] call iniDB_write;
 		};
 
 		PUBLIC FUNCTION("object","LoadPlayer") {
-			private ["_temp", "_DB"];
+			private ["_temp", "_DB", "_array", "_headgear", "_goggles", "_uniform", "_uniformitems", "_vest", "_vestitems", "_backpack", "_backpackitems", "_primaryweapon", "_primaryweaponitems", "_primaryweaponmagazine", "_secondaryweapon", "_secondaryweaponitems", "_secondaryweaponmagazine", "_handgun", "_handgunweaponitems", "_handgunweaponmagazine", "_assigneditems", "_position", "_damage", "_dir"];
+
 			_DB = format ["%1", getplayeruid _this];
 			if!(_DB call iniDB_exists) exitwith {false;};
 
 			MEMBER("RemoveAll", _this);
 
-			_temp = [_DB, "inventory", "position","ARRAY"] call iniDB_read;
-			_this setposatl _temp;
-	
-			_temp = [_DB, "inventory", "damage","SCALAR"] call iniDB_read;
-			_this setdamage _temp;
-	
-			_temp = [_DB, "inventory", "HEADGEAR","STRING"] call iniDB_read;
-			_this addHeadgear _temp;
-	
-			_temp = [_DB, "inventory", "UNIFORM","STRING"] call iniDB_read;
-			_this addUniform _temp;
-	
-			_temp = [_DB, "inventory", "UNIFORMITEMS","ARRAY"] call iniDB_read;
+			_array = [_DB, "player", "inventory","ARRAY"] call iniDB_read;
+			_headgear = _array select 0;
+			_goggles = _array select 1;
+			_uniform = _array select 2;
+			_uniformitems = _array select 3;
+			_vest = _array select 4;
+			_vestitems = _array select 5;
+			_backpack = _array select 6;
+			_backpackitems = _array select 7;
+			_primaryweapon = _array select 8;
+			_primaryweaponitems = _array select 9;
+			_primaryweaponmagazine = _array select 10;
+			_secondaryweapon = _array select 11;
+			_secondaryweaponitems = _array select 12;
+			_secondaryweaponmagazine = _array select 13;
+			_handgunweapon = _array select 14;
+			_handgunweaponitems = _array select 15;
+			_handgunweaponmagazine = _array select 16;
+			_assigneditems = _array select 17;
+			_position = _array select 18;
+			_damage = _array select 19;
+			_dir = _array select 20;
+
+			_this setposatl _position;
+			_this setdamage _damage;
+			_this setdir _dir;
+			_this addHeadgear _headgear;
+			_this addUniform _uniform;
+			_this addGoggles _goggles;
+			_this addVest _vest;
+			_this addweapon _primaryweapon;
+			_this addweapon _secondaryweapon;
+			_this addweapon _handgunweapon;
+
 			{
 				_this addItemToUniform _x;
-			}foreach _temp;
+			}foreach _uniformitems;
 	
-			_temp = [_DB, "inventory", "GOGGLES","STRING"] call iniDB_read;
-			_this addGoggles _temp;
-	
-			_temp = [_DB, "inventory", "VEST","STRING"] call iniDB_read;
-			_this addVest _temp;
-	
-			_temp = [_DB, "inventory", "VESTITEMS","ARRAY"] call iniDB_read;
 			{
 				_this addItemToVest _x;
-			}foreach _temp;
+			}foreach _vestitems;
 	
-			_temp = [_DB, "inventory", "BACKPACK","STRING"] call iniDB_read;
-			if(format["%1", _temp] != "") then {
-				_this addbackpack _temp;
-				_temp = [_DB, "inventory", "BACKPACKITEMS","ARRAY"] call iniDB_read;
+			if(format["%1", _backpack] != "") then {
+				_this addbackpack _backpack;
 				{
 					_this addItemToBackpack _x;
-				} foreach _temp;
+				} foreach _backpackitemps;
 			};
 	
-			_temp = [_DB, "inventory", "WEAPON","STRING"] call iniDB_read;
-			_this addweapon _temp;
-	
-			_temp = [_DB, "inventory", "WEAPONMAGAZINES","ARRAY"] call iniDB_read;
 			{
 				_this addMagazine _x;
-			} foreach _temp;
+			} foreach _primaryweaponmagazine;
 	
-			_temp = [_DB, "inventory", "WEAPONITEMS","ARRAY"] call iniDB_read;
 			{
 				_this addPrimaryWeaponItem _x;
-			} foreach _temp;
+			} foreach _primaryweaponitems;
 	
-	
-			_temp = [_DB, "inventory", "SECONDARYWEAPON","STRING"] call iniDB_read;
-			_this addweapon _temp;
-	
-			_temp = [_DB, "inventory", "SECONDARYWEAPONMAGAZINES","ARRAY"] call iniDB_read;
 			{
 				_this addMagazine _x;
-			} foreach _temp;
+			} foreach _secondaryweaponmagazine;
 	
-			_temp = [_DB, "inventory", "SECONDARYWEAPONITEMS","ARRAY"] call iniDB_read;
 			{
 				_this addSecondaryWeaponItem _x;
-			} foreach _temp;
+			} foreach _secondaryweaponitems;
 	
-			_temp = [_DB, "inventory", "HANDGUNWEAPON","STRING"] call iniDB_read;
-			_this addweapon _temp;
 	
-			_temp = [_DB, "inventory", "HANDGUNWEAPONMAGAZINES","ARRAY"] call iniDB_read;
 			{
 				_this addMagazine _x;
-			} foreach _temp;
+			} foreach _handgunweaponmagazine;
 	
-			_temp = [_DB, "inventory", "HANDGUNWEAPONITEMS","ARRAY"] call iniDB_read;
 			{
 				_this addHandgunItem _x;
-			} foreach _temp;
+			} foreach _handgunweaponitems;
 	
-			
-			_temp = [_DB, "inventory", "ITEMS","ARRAY"] call iniDB_read;
 			{
 				_this additem _x;
 				_this assignItem _x;
-			} foreach _temp;
+			} foreach _assigneditems;
 			true;
 		};
 
