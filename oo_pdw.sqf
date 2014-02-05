@@ -99,7 +99,7 @@
 	
 			_temp = [_DB, "inventory", "UNIFORMITEMS","ARRAY"] call iniDB_read;
 			{
-				_this additem _x;
+				_this addItemToUniform _x;
 			}foreach _temp;
 	
 			_temp = [_DB, "inventory", "GOGGLES","STRING"] call iniDB_read;
