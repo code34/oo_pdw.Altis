@@ -29,7 +29,7 @@
 			[] call compilefinal preProcessFile "\inidbi\init.sqf";
 		};	
 
-		PUBLIC FUNCTION("object","RemoveAll") {
+		PUBLIC FUNCTION("object","ClearPlayer") {
 			removeallweapons _this;
 			removeGoggles _this;
 			removeHeadgear _this;
@@ -37,6 +37,13 @@
 			removeUniform _this;
 			removeAllAssignedItems _this;
 			removeBackpack _this;
+		};
+
+		PUBLIC FUNCTION("object","ClearVehicle") {
+			clearWeaponCargoGlobal _this;
+			clearMagazineCargoGlobal _this;
+			clearItemCargoGlobal _this;
+			clearBackpackCargoGlobal _this;
 		};
 
 		PUBLIC FUNCTION("array","SaveVehicle") {
@@ -63,11 +70,7 @@
 			_vehicle setdir (_array select 2);
 			_vehicle setdamage (_array select 3);
 
-			clearWeaponCargoGlobal _vehicle;
-			clearMagazineCargoGlobal _vehicle;
-			clearItemCargoGlobal _vehicle;
-			clearBackpackCargoGlobal _vehicle;
-
+			MEMBER("ClearVehicle", _this);
 
 			_items = (_array select 4) select 0;
 			_count = (_array select 4) select 1;
@@ -138,7 +141,7 @@
 			_DB = format ["%1", getplayeruid _this];
 			if!(_DB call iniDB_exists) exitwith {false;};
 
-			MEMBER("RemoveAll", _this);
+			MEMBER("ClearPlayer", _this);
 
 			_array = [_DB, "player", "inventory","ARRAY"] call iniDB_read;
 			_headgear = _array select 0;
