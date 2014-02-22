@@ -43,21 +43,63 @@
 			private ["_array", "_name", "_result"];
 			_name = _this select 0;
 			_array = [
-				(typeof _this select 1)
+				(typeof _this select 1),
 				(getposatl _this select 1),
 				(getdir_ this select 1),
-				(damage _this select 1)
+				(damage _this select 1),
+				(getWeaponCargo _this select 1),
+				(getMagazineCargo _this select 1),
+				(getItemCargo _this select 1),
+				(getBackpackCargo _this select 1)
 				];
 			_result = [missionName, "vehicle", _name, _array] call iniDB_write;
 		};
 
 		PUBLIC FUNCTION("string","LoadVehicle") {
-			private ["_array", "_name", "_vehicle"];
+			private ["_array", "_i", "_name", "_vehicle", "_item", "_count"];
 			_name = _this select 0;
 			_array = [missionName, "vehicle", _name,"ARRAY"] call iniDB_read;
 			_vehicle = createVehicle [(_array select 0), (_array select 1), [], 0, "NONE"];
 			_vehicle setdir (_array select 2);
 			_vehicle setdamage (_array select 3);
+
+			clearWeaponCargoGlobal _vehicle;
+			clearMagazineCargoGlobal _vehicle;
+			clearItemCargoGlobal _vehicle;
+			clearBackpackCargoGlobal _vehicle;
+
+
+			_items = (_array select 4) select 0;
+			_count = (_array select 4) select 1;
+			_i = 0;
+			{
+				_vehicle addWeaponCargoGlobal [_x, _count select _i];
+				_i = _i + 1;
+			}foreach _items;
+
+			_items = (_array select 5) select 0;
+			_count = (_array select 5) select 1;
+			_i = 0;
+			{
+				_vehicle addMagazineCargoGlobal [_x, _count select _i];
+				_i = _i + 1;
+			}foreach _items;
+
+			_items = (_array select 6) select 0;
+			_count = (_array select 6) select 1;
+			_i = 0;
+			{
+				_vehicle addItemCargoGlobal [_x, _count select _i];
+				_i = _i + 1;
+			}foreach _items;
+
+			_items = (_array select 7) select 0;
+			_count = (_array select 7) select 1;
+			_i = 0;
+			{
+				_vehicle addBackpackCargoGlobal [_x, _count select _i];
+				_i = _i + 1;
+			}foreach _items;
 			_vehicle;
 		};
 
