@@ -39,17 +39,26 @@
 			removeBackpack _this;
 		};
 
-		PUBLIC FUNCTION("object","SaveVehicle") {
-			private ["_DB", "_result"];
-			_DB = format ["%1", getplayeruid _this];
-			_result = [_DB, "vehicle", "dir", getdir _this] call iniDB_write;
-			_result = [_DB, "vehicle", "position", getposatl _this] call iniDB_write;
-			_result = [_DB, "vehicle", "damage", damage _this] call iniDB_write;
-			_result = [_DB, "vehicle", "typeof", typeof _this] call iniDB_write;			
+		PUBLIC FUNCTION("array","SaveVehicle") {
+			private ["_array", "_name", "_result"];
+			_name = _this select 0;
+			_array = [
+				(typeof _this select 1)
+				(getposatl _this select 1),
+				(getdir_ this select 1),
+				(damage _this select 1)
+				];
+			_result = [missionName, "vehicle", _name, _array] call iniDB_write;
 		};
 
-		PUBLIC FUNCTION("object","LoadVehicle") {
-			private ["_DB", "_result"];
+		PUBLIC FUNCTION("string","LoadVehicle") {
+			private ["_array", "_name", "_vehicle"];
+			_name = _this select 0;
+			_array = [missionName, "vehicle", _name,"ARRAY"] call iniDB_read;
+			_vehicle = createVehicle [(_array select 0), (_array select 1), [], 0, "NONE"];
+			_vehicle setdir (_array select 2);
+			_vehicle setdamage (_array select 3);
+			_vehicle;
 		};
 
 		PUBLIC FUNCTION("object","SavePlayer") {
