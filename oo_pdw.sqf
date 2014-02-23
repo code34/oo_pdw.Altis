@@ -23,11 +23,15 @@
 	CLASS("OO_PDW")
 		PUBLIC FUNCTION("","constructor") { 
 			if !(isClass(configFile >> "cfgPatches" >> "inidbi")) exitwith { 
-				hint "PDW: requires INIDBI"; 
-				diag_log "PDW: requires INIDBI";
+				MEMBER("ToLog", "PDW: requires INIDBI");
 			};
 			[] call compilefinal preProcessFile "\inidbi\init.sqf";
-		};	
+		};
+
+		PUBLIC FUNCTION("string","ToLog") {
+			hint _this;
+			diag_log _this;
+		};
 
 		PUBLIC FUNCTION("object","ClearPlayer") {
 			removeallweapons _this;
@@ -50,8 +54,7 @@
 			private ["_array", "_name", "_result"];
 			_name = _this select 0;
 			if (isnil _name) exitwith { 
-				hint "PDW: require a vehicle name to SaveVehicle"; 
-				diag_log "PDW: require a vehicle name to SaveVehicle";
+				MEMBER("ToLog", "PDW: require a vehicle name to SaveVehicle");
 			};
 			_array = [
 				(typeof _this select 1),
@@ -70,8 +73,7 @@
 			private ["_array", "_i", "_name", "_vehicle", "_item", "_count"];
 			_name = _this select 0;
 			if (isnil _name) exitwith { 
-				hint "PDW: require a vehicle name to LoadVehicle"; 
-				diag_log "PDW: require a vehicle name to LoadVehicle";
+				MEMBER("ToLog", "PDW: require a vehicle name to LoadVehicle");
 			};
 			_array = [missionName, "vehicle", _name,"ARRAY"] call iniDB_read;
 			_vehicle = createVehicle [(_array select 0), (_array select 1), [], 0, "NONE"];
