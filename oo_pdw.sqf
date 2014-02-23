@@ -49,6 +49,10 @@
 		PUBLIC FUNCTION("array","SaveVehicle") {
 			private ["_array", "_name", "_result"];
 			_name = _this select 0;
+			if (isnil _name) exitwith { 
+				hint "PDW: require a vehicle name to SaveVehicle"; 
+				diag_log "PDW: require a vehicle name to SaveVehicle";
+			};
 			_array = [
 				(typeof _this select 1),
 				(getposatl _this select 1),
@@ -65,6 +69,10 @@
 		PUBLIC FUNCTION("string","LoadVehicle") {
 			private ["_array", "_i", "_name", "_vehicle", "_item", "_count"];
 			_name = _this select 0;
+			if (isnil _name) exitwith { 
+				hint "PDW: require a vehicle name to LoadVehicle"; 
+				diag_log "PDW: require a vehicle name to LoadVehicle";
+			};
 			_array = [missionName, "vehicle", _name,"ARRAY"] call iniDB_read;
 			_vehicle = createVehicle [(_array select 0), (_array select 1), [], 0, "NONE"];
 			_vehicle setdir (_array select 2);
