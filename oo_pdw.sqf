@@ -77,6 +77,7 @@
 			};
 			_array = [missionName, "vehicle", _name,"ARRAY"] call iniDB_read;
 			_vehicle = createVehicle [(_array select 0), (_array select 1), [], 0, "NONE"];
+			_vehicle setposatl (_array select 1);
 			_vehicle setdir (_array select 2);
 			_vehicle setdamage (_array select 3);
 
@@ -180,7 +181,7 @@
 			_this setdamage _damage;
 			_this setdir _dir;
 			_this addHeadgear _headgear;
-			_this addUniform _uniform;
+			_this forceAddUniform _uniform;
 			_this addGoggles _goggles;
 			_this addVest _vest;
 			_this addweapon _primaryweapon;
@@ -199,7 +200,7 @@
 				_this addbackpack _backpack;
 				{
 					_this addItemToBackpack _x;
-				} foreach _backpackitemps;
+				} foreach _backpackitems;
 			};
 	
 			{
