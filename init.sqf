@@ -1,16 +1,18 @@
 		[] call compilefinal preprocessFileLineNumbers "oo_pdw.sqf";
 
-		sleep 5;
+		sleep 2;
 
 		 _pdw = ["new"] call OO_PDW;
-		["SavePlayer", player] call _pdw;
+		["savePlayer", player] call _pdw;
 
-		["RemoveAll", player] call _pdw;
-		hint "Remove All equipements";
+		sleep 2;
 
-		sleep 5;
+		["clearPlayer", player] call _pdw;
+		hint "Clear all Player equipements";
 
-		["LoadPlayer", player] call _pdw;
+		sleep 2;
+
+		["loadPlayer", player] call _pdw;
 		hint "Restore All";
 
 
