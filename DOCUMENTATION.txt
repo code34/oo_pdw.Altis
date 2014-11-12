@@ -32,7 +32,7 @@
 
 
 /*
-	Function: = ["RemoveAll", _player] call OO_PDW;
+	Function: = ["clearPlayer", _player] call OO_PDW;
 	Remove all the equipement
 	
 	Parameters:
@@ -41,7 +41,7 @@
 */
 
 /*
-	Function: = ["SavePlayer", _player] call OO_PDW;
+	Function: = ["savePlayer", _player] call OO_PDW;
 	Save player life, position and equipement
 	
 	Parameters:
@@ -50,7 +50,7 @@
 */
 
 /*
-	Function: = ["LoadPlayer", _player] call OO_PDW;
+	Function: = ["loadPlayer", _player] call OO_PDW;
 	Load player life, position and equipement
 	
 	Parameters:
