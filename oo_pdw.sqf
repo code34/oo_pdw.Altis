@@ -28,12 +28,12 @@
 			[] call compilefinal preProcessFile "\inidbi\init.sqf";
 		};
 
-		PUBLIC FUNCTION("string","ToLog") {
+		PUBLIC FUNCTION("string","toLog") {
 			hint _this;
 			diag_log _this;
 		};
 
-		PUBLIC FUNCTION("object","ClearPlayer") {
+		PUBLIC FUNCTION("object","clearPlayer") {
 			removeallweapons _this;
 			removeGoggles _this;
 			removeHeadgear _this;
@@ -43,24 +43,24 @@
 			removeBackpack _this;
 		};
 
-		PUBLIC FUNCTION("object","ClearVehicle") {
+		PUBLIC FUNCTION("object","clearVehicle") {
 			clearWeaponCargoGlobal _this;
 			clearMagazineCargoGlobal _this;
 			clearItemCargoGlobal _this;
 			clearBackpackCargoGlobal _this;
 		};
 
-		PUBLIC FUNCTION("array","SaveVehicle") {
+		PUBLIC FUNCTION("array","saveVehicle") {
 			private ["_array", "_name", "_result"];
 			_name = _this select 0;
-			if (isnil _name) exitwith { 
+			if (isnil "_name") exitwith { 
 				MEMBER("ToLog", "PDW: require a vehicle name to SaveVehicle");
 			};
 			_array = [
 				(typeof _this select 1),
 				(getposatl _this select 1),
-				(getdir_ this select 1),
-				(damage _this select 1),
+				(getdir _this select 1),
+				(getDammage _this select 1),
 				(getWeaponCargo _this select 1),
 				(getMagazineCargo _this select 1),
 				(getItemCargo _this select 1),
@@ -69,10 +69,10 @@
 			_result = [missionName, "vehicle", _name, _array] call iniDB_write;
 		};
 
-		PUBLIC FUNCTION("string","LoadVehicle") {
+		PUBLIC FUNCTION("string","loadVehicle") {
 			private ["_array", "_i", "_name", "_vehicle", "_item", "_count"];
 			_name = _this select 0;
-			if (isnil _name) exitwith { 
+			if (isnil "_name") exitwith { 
 				MEMBER("ToLog", "PDW: require a vehicle name to LoadVehicle");
 			};
 			_array = [missionName, "vehicle", _name,"ARRAY"] call iniDB_read;
@@ -117,7 +117,7 @@
 			_vehicle;
 		};
 
-		PUBLIC FUNCTION("object","SavePlayer") {
+		PUBLIC FUNCTION("object","savePlayer") {
 			private ["_DB", "_result", "_array"];
 			_DB = format ["%1", getplayeruid _this];
 			_array = [
@@ -146,7 +146,7 @@
 			_result = [_DB, "player", "inventory", _array] call iniDB_write;
 		};
 
-		PUBLIC FUNCTION("object","LoadPlayer") {
+		PUBLIC FUNCTION("object","loadPlayer") {
 			private ["_temp", "_DB", "_array", "_headgear", "_goggles", "_uniform", "_uniformitems", "_vest", "_vestitems", "_backpack", "_backpackitems", "_primaryweapon", "_primaryweaponitems", "_primaryweaponmagazine", "_secondaryweapon", "_secondaryweaponitems", "_secondaryweaponmagazine", "_handgun", "_handgunweaponitems", "_handgunweaponmagazine", "_assigneditems", "_position", "_damage", "_dir"];
 
 			_DB = format ["%1", getplayeruid _this];
@@ -206,7 +206,7 @@
 			{
 				_this addMagazine _x;
 			} foreach _primaryweaponmagazine;
-	
+
 			{
 				_this addPrimaryWeaponItem _x;
 			} foreach _primaryweaponitems;
@@ -232,6 +232,7 @@
 				_this additem _x;
 				_this assignItem _x;
 			} foreach _assigneditems;
+			if (needReload _this == 1) then {reload _this};
 			true;
 		};
 
