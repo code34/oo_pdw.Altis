@@ -70,7 +70,7 @@
 
 /*
 	Function: = ["loadObject", _name] call OO_PDW;
-	load object, and all its cargo
+	load object and return object loaded
 	
 	Parameters:
 		_name : string
@@ -89,7 +89,7 @@
 
 /*
 	Function: = "loadObjects" call OO_PDW;
-	Load all objects
+	Load and return all objects loaded
 	
 	Parameters:
 		none
