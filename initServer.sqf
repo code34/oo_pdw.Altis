@@ -1,4 +1,4 @@
-		[] call compilefinal preprocessFileLineNumbers "oo_pdw.sqf";
+﻿		[] call compilefinal preprocessFileLineNumbers "oo_pdw.sqf";
 
 		sleep 2;
 
@@ -15,21 +15,20 @@
 		["loadUnit", player] call _pdw;
 		hint "Restore All";
 
-		sleep 2;
-
-		hint "saving all vehicles";
-		"saveVehicles" call _pdw;
+		hint "saving all objects";
+		"saveObjects" call _pdw;
 
 		sleep 2;
-		hint "deleting all vehicles";
+		hint "deleting all objects";
 
 		deletevehicle vehicle1;
 		deletevehicle vehicle2;
+		deletevehicle ammo1;
 
 		sleep 2;
 
 		hint "loading all vehicles";
-		"loadVehicles" call _pdw;		
+		"loadObjects" call _pdw;		
 
 
 
