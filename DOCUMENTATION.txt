@@ -32,7 +32,7 @@
 
 
 /*
-	Function: = ["clearPlayer", _player] call OO_PDW;
+	Function: = ["clearUnit", _player] call OO_PDW;
 	Remove all the equipement
 	
 	Parameters:
@@ -41,7 +41,7 @@
 */
 
 /*
-	Function: = ["savePlayer", _player] call OO_PDW;
+	Function: = ["saveUnit", _player] call OO_PDW;
 	Save player life, position and equipement
 	
 	Parameters:
@@ -50,10 +50,48 @@
 */
 
 /*
-	Function: = ["loadPlayer", _player] call OO_PDW;
+	Function: = ["loadUnit", _player] call OO_PDW;
 	Load player life, position and equipement
 	
 	Parameters:
 		_player - player man object
+	
+*/
+
+/*
+	Function: = ["saveVehicle", [_name, _object]] call OO_PDW;
+	save vehicle, and all its cargo
+	
+	Parameters:
+		_name : string
+		_object : vehicle
+	
+*/
+
+/*
+	Function: = ["loadVehicle", _name] call OO_PDW;
+	load a vehicle, and all its cargo
+	
+	Parameters:
+		_name : string
+	
+*/
+
+/*
+	Function: = "saveVehicles" call OO_PDW;
+	Save all vehicles
+	
+	Parameters:
+		none
+	
+*/
+
+
+/*
+	Function: = "loadVehicles" call OO_PDW;
+	Load all vehicles
+	
+	Parameters:
+		none
 	
 */
