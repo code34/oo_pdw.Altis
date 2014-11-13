@@ -21,12 +21,19 @@
 	#include "oop.h"
 
 	CLASS("OO_PDW")
+		PRIVATE VARIABLE("array","objects");
+		
 		PUBLIC FUNCTION("","constructor") { 
+			private ["_array"];
 			if !(isClass(configFile >> "cfgPatches" >> "inidbi")) exitwith { 
 				MEMBER("ToLog", "PDW: requires INIDBI");
 			};
 			[] call compilefinal preProcessFile "\inidbi\init.sqf";
+			_array = [];
+			MEMBER("objects", _array);
 		};
+
+		PUBLIC FUNCTION("","getObjects") FUNC_GETVAR("objects");
 
 		PUBLIC FUNCTION("string","toLog") {
 			hint _this;
@@ -43,47 +50,47 @@
 			removeBackpack _this;
 		};
 
-		PUBLIC FUNCTION("object","clearVehicle") {
+		PUBLIC FUNCTION("object","clearObject") {
 			clearWeaponCargoGlobal _this;
 			clearMagazineCargoGlobal _this;
 			clearItemCargoGlobal _this;
 			clearBackpackCargoGlobal _this;
 		};
 
-		PUBLIC FUNCTION("","saveVehicles") {
+		PUBLIC FUNCTION("","saveObjects") {
 			private ["_name", "_counter"];
 			{
-				_save = [format ["PDW_VEHICLES_%1", _foreachindex], _x];
-				MEMBER("saveVehicle", _save);
+				_save = [format ["PDW_OBJECTS_%1", _foreachindex], _x];
+				MEMBER("saveObject", _save);
 				_counter = _foreachindex;
 				sleep 0.01;
 			}foreach vehicles;
-			_result = [missionName, "vehicle", "pdw_vehicles", _counter] call iniDB_write;
+			_result = [missionName, "object", "pdw_objects", _counter] call iniDB_write;
 		};
 
-		PUBLIC FUNCTION("","loadVehicles") {
+		PUBLIC FUNCTION("","loadObjects") {
 			private ["_name", "_counter"];
-			_counter = [missionName, "vehicle", "pdw_vehicles","SCALAR"] call iniDB_read;
+			_counter = [missionName, "object", "pdw_objects","SCALAR"] call iniDB_read;
 			for "_x" from 0 to _counter step 1 do {
-				_name = format ["PDW_VEHICLES_%1", _x];
-				MEMBER("loadVehicle", _name);
+				_name = format ["PDW_OBJECTS_%1", _x];
+				MEMBER("loadObject", _name);
 				sleep 0.01;
 			};
 		};
 
-		PUBLIC FUNCTION("array","saveVehicle") {
+		PUBLIC FUNCTION("array","saveObject") {
 			private ["_array", "_name", "_result", "_object"];
 			
 			_name = _this select 0;
 			_object = _this select 1;
 			
 			if (isnil "_name") exitwith { 
-				MEMBER("ToLog", "PDW: require a vehicle name to SaveVehicle");
+				MEMBER("ToLog", "PDW: require a object name to saveObject");
 			};
 
 			_array = [
 				(typeof _object),
-				(getposatl _object),
+				(getpos _object),
 				(getdir _object),
 				(getDammage _object),
 				(getWeaponCargo _object),
@@ -91,51 +98,51 @@
 				(getItemCargo _object),
 				(getBackpackCargo _object)
 				];
-			_result = [missionName, "vehicle", _name, _array] call iniDB_write;
+			_result = [missionName, "object", _name, _array] call iniDB_write;
 		};
 
-		PUBLIC FUNCTION("string","loadVehicle") {
-			private ["_array", "_name", "_vehicle", "_item", "_count"];
+		PUBLIC FUNCTION("string","loadObject") {
+			private ["_array", "_name", "_object", "_item", "_count"];
 			
 			_name = _this;
 
 			if (isnil "_name") exitwith { 
-				MEMBER("ToLog", "PDW: require a vehicle name to LoadVehicle");
+				MEMBER("ToLog", "PDW: require a object name to loadObject");
 			};
-			_array = [missionName, "vehicle", _name,"ARRAY"] call iniDB_read;
+			_array = [missionName, "object", _name,"ARRAY"] call iniDB_read;
 			if(_array isequalto "") exitwith {false};
 
-			_vehicle = createVehicle [(_array select 0), (_array select 1), [], 0, "NONE"];
-			_vehicle setposatl (_array select 1);
-			_vehicle setdir (_array select 2);
-			_vehicle setdamage (_array select 3);
+			_object = createVehicle [(_array select 0), (_array select 1), [], 0, "NONE"];
+			_object setposatl (_array select 1);
+			_object setdir (_array select 2);
+			_object setdamage (_array select 3);
 
-			MEMBER("ClearVehicle", _this);
+			MEMBER("ClearObject", _this);
 
 			_items = (_array select 4) select 0;
 			_count = (_array select 4) select 1;
 			{
-				_vehicle addWeaponCargoGlobal [_x, _count select _foreachindex];
+				_object addWeaponCargoGlobal [_x, _count select _foreachindex];
 			}foreach _items;
 
 			_items = (_array select 5) select 0;
 			_count = (_array select 5) select 1;
 			{
-				_vehicle addMagazineCargoGlobal [_x, _foreachindex];
+				_object addMagazineCargoGlobal [_x, _foreachindex];
 			}foreach _items;
 
 			_items = (_array select 6) select 0;
 			_count = (_array select 6) select 1;
 			{
-				_vehicle addItemCargoGlobal [_x, _count select _foreachindex];
+				_object addItemCargoGlobal [_x, _count select _foreachindex];
 			}foreach _items;
 
 			_items = (_array select 7) select 0;
 			_count = (_array select 7) select 1;
 			{
-				_vehicle addBackpackCargoGlobal [_x, _count select _foreachindex];
+				_object addBackpackCargoGlobal [_x, _count select _foreachindex];
 			}foreach _items;
-			_vehicle;
+			_object;
 		};
 
 		PUBLIC FUNCTION("object","saveUnit") {
@@ -257,5 +264,7 @@
 			true;
 		};
 
-		PUBLIC FUNCTION("array","deconstructor") { };
+		PUBLIC FUNCTION("array","deconstructor") { 
+			DELETE_VARIABLE("objects");
+		};
 	ENDCLASS;
