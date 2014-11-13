@@ -59,18 +59,18 @@
 */
 
 /*
-	Function: = ["saveVehicle", [_name, _object]] call OO_PDW;
-	save vehicle, and all its cargo
+	Function: = ["saveObject", [_name, _object]] call OO_PDW;
+	save object, and all its cargo
 	
 	Parameters:
 		_name : string
-		_object : vehicle
+		_object :  object
 	
 */
 
 /*
-	Function: = ["loadVehicle", _name] call OO_PDW;
-	load a vehicle, and all its cargo
+	Function: = ["loadObject", _name] call OO_PDW;
+	load object, and all its cargo
 	
 	Parameters:
 		_name : string
@@ -78,8 +78,8 @@
 */
 
 /*
-	Function: = "saveVehicles" call OO_PDW;
-	Save all vehicles
+	Function: = "saveObjects" call OO_PDW;
+	Save all objects
 	
 	Parameters:
 		none
@@ -88,8 +88,8 @@
 
 
 /*
-	Function: = "loadVehicles" call OO_PDW;
-	Load all vehicles
+	Function: = "loadObjects" call OO_PDW;
+	Load all objects
 	
 	Parameters:
 		none
