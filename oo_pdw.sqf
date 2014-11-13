@@ -33,7 +33,7 @@
 			diag_log _this;
 		};
 
-		PUBLIC FUNCTION("object","clearPlayer") {
+		PUBLIC FUNCTION("object","clearUnit") {
 			removeallweapons _this;
 			removeGoggles _this;
 			removeHeadgear _this;
@@ -50,32 +50,61 @@
 			clearBackpackCargoGlobal _this;
 		};
 
+		PUBLIC FUNCTION("","saveVehicles") {
+			private ["_name", "_counter"];
+			{
+				_save = [format ["PDW_VEHICLES_%1", _foreachindex], _x];
+				MEMBER("saveVehicle", _save);
+				_counter = _foreachindex;
+				sleep 0.01;
+			}foreach vehicles;
+			_result = [missionName, "vehicle", "pdw_vehicles", _counter] call iniDB_write;
+		};
+
+		PUBLIC FUNCTION("","loadVehicles") {
+			private ["_name", "_counter"];
+			_counter = [missionName, "vehicle", "pdw_vehicles","SCALAR"] call iniDB_read;
+			for "_x" from 0 to _counter step 1 do {
+				_name = format ["PDW_VEHICLES_%1", _x];
+				MEMBER("loadVehicle", _name);
+				sleep 0.01;
+			};
+		};
+
 		PUBLIC FUNCTION("array","saveVehicle") {
-			private ["_array", "_name", "_result"];
+			private ["_array", "_name", "_result", "_object"];
+			
 			_name = _this select 0;
+			_object = _this select 1;
+			
 			if (isnil "_name") exitwith { 
 				MEMBER("ToLog", "PDW: require a vehicle name to SaveVehicle");
 			};
+
 			_array = [
-				(typeof _this select 1),
-				(getposatl _this select 1),
-				(getdir _this select 1),
-				(getDammage _this select 1),
-				(getWeaponCargo _this select 1),
-				(getMagazineCargo _this select 1),
-				(getItemCargo _this select 1),
-				(getBackpackCargo _this select 1)
+				(typeof _object),
+				(getposatl _object),
+				(getdir _object),
+				(getDammage _object),
+				(getWeaponCargo _object),
+				(getMagazineCargo _object),
+				(getItemCargo _object),
+				(getBackpackCargo _object)
 				];
 			_result = [missionName, "vehicle", _name, _array] call iniDB_write;
 		};
 
 		PUBLIC FUNCTION("string","loadVehicle") {
-			private ["_array", "_i", "_name", "_vehicle", "_item", "_count"];
-			_name = _this select 0;
+			private ["_array", "_name", "_vehicle", "_item", "_count"];
+			
+			_name = _this;
+
 			if (isnil "_name") exitwith { 
 				MEMBER("ToLog", "PDW: require a vehicle name to LoadVehicle");
 			};
 			_array = [missionName, "vehicle", _name,"ARRAY"] call iniDB_read;
+			if(_array isequalto "") exitwith {false};
+
 			_vehicle = createVehicle [(_array select 0), (_array select 1), [], 0, "NONE"];
 			_vehicle setposatl (_array select 1);
 			_vehicle setdir (_array select 2);
@@ -85,39 +114,31 @@
 
 			_items = (_array select 4) select 0;
 			_count = (_array select 4) select 1;
-			_i = 0;
 			{
-				_vehicle addWeaponCargoGlobal [_x, _count select _i];
-				_i = _i + 1;
+				_vehicle addWeaponCargoGlobal [_x, _count select _foreachindex];
 			}foreach _items;
 
 			_items = (_array select 5) select 0;
 			_count = (_array select 5) select 1;
-			_i = 0;
 			{
-				_vehicle addMagazineCargoGlobal [_x, _count select _i];
-				_i = _i + 1;
+				_vehicle addMagazineCargoGlobal [_x, _foreachindex];
 			}foreach _items;
 
 			_items = (_array select 6) select 0;
 			_count = (_array select 6) select 1;
-			_i = 0;
 			{
-				_vehicle addItemCargoGlobal [_x, _count select _i];
-				_i = _i + 1;
+				_vehicle addItemCargoGlobal [_x, _count select _foreachindex];
 			}foreach _items;
 
 			_items = (_array select 7) select 0;
 			_count = (_array select 7) select 1;
-			_i = 0;
 			{
-				_vehicle addBackpackCargoGlobal [_x, _count select _i];
-				_i = _i + 1;
+				_vehicle addBackpackCargoGlobal [_x, _count select _foreachindex];
 			}foreach _items;
 			_vehicle;
 		};
 
-		PUBLIC FUNCTION("object","savePlayer") {
+		PUBLIC FUNCTION("object","saveUnit") {
 			private ["_DB", "_result", "_array"];
 			_DB = format ["%1", getplayeruid _this];
 			_array = [
@@ -146,8 +167,8 @@
 			_result = [_DB, "player", "inventory", _array] call iniDB_write;
 		};
 
-		PUBLIC FUNCTION("object","loadPlayer") {
-			private ["_temp", "_DB", "_array", "_headgear", "_goggles", "_uniform", "_uniformitems", "_vest", "_vestitems", "_backpack", "_backpackitems", "_primaryweapon", "_primaryweaponitems", "_primaryweaponmagazine", "_secondaryweapon", "_secondaryweaponitems", "_secondaryweaponmagazine", "_handgun", "_handgunweaponitems", "_handgunweaponmagazine", "_assigneditems", "_position", "_damage", "_dir"];
+		PUBLIC FUNCTION("object","loadUnit") {
+			private ["_DB", "_array", "_headgear", "_goggles", "_uniform", "_uniformitems", "_vest", "_vestitems", "_backpack", "_backpackitems", "_primaryweapon", "_primaryweaponitems", "_primaryweaponmagazine", "_secondaryweapon", "_secondaryweaponitems", "_secondaryweaponmagazine", "_handgun", "_handgunweaponitems", "_handgunweaponmagazine", "_assigneditems", "_position", "_damage", "_dir"];
 
 			_DB = format ["%1", getplayeruid _this];
 			if!(_DB call iniDB_exists) exitwith {false;};

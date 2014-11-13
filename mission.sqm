@@ -4,11 +4,17 @@ class Mission
 	addOns[]=
 	{
 		"A3_Characters_F_BLUFOR",
-		"a3_map_altis"
+		"a3_map_altis",
+		"a3_characters_f",
+		"A3_Air_F_Heli_Light_01",
+		"A3_Armor_F_Panther"
 	};
 	addOnsAuto[]=
 	{
 		"A3_Characters_F_BLUFOR",
+		"a3_characters_f",
+		"A3_Air_F_Heli_Light_01",
+		"A3_Armor_F_Panther",
 		"a3_map_altis"
 	};
 	randomSeed=7374927;
@@ -48,16 +54,42 @@ class Mission
 				items=1;
 				class Item0
 				{
-					position[]={14657.012,17.91,16759.326};
+					position[]={14704.826,17.91,16750.596};
 					id=0;
 					side="WEST";
 					vehicle="B_Soldier_F";
-					player="PLAY CDG";
+					player="PLAYER COMMANDER";
 					leader=1;
 					skill=0.60000002;
 					description="toto";
 				};
 			};
+		};
+	};
+	class Vehicles
+	{
+		items=2;
+		class Item0
+		{
+			position[]={14704.614,17.91,16767.375};
+			id=1;
+			side="EMPTY";
+			vehicle="B_Heli_Light_01_F";
+			leader=1;
+			skill=0.60000002;
+			text="vehicle1";
+			description="toto";
+		};
+		class Item1
+		{
+			position[]={14700.945,17.91,16751.617};
+			id=2;
+			side="EMPTY";
+			vehicle="B_APC_Tracked_01_rcws_F";
+			leader=1;
+			skill=0.60000002;
+			text="vehicle2";
+			description="toto";
 		};
 	};
 };

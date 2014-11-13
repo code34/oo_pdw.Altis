@@ -3,16 +3,34 @@
 		sleep 2;
 
 		 _pdw = ["new"] call OO_PDW;
-		["savePlayer", player] call _pdw;
+		["saveUnit", player] call _pdw;
 
 		sleep 2;
 
-		["clearPlayer", player] call _pdw;
+		["clearUnit", player] call _pdw;
 		hint "Clear all Player equipements";
 
 		sleep 2;
 
-		["loadPlayer", player] call _pdw;
+		["loadUnit", player] call _pdw;
 		hint "Restore All";
+
+		sleep 2;
+
+		hint "saving all vehicles";
+		"saveVehicles" call _pdw;
+
+		sleep 2;
+		hint "deleting all vehicles";
+
+		deletevehicle vehicle1;
+		deletevehicle vehicle2;
+
+		sleep 2;
+
+		hint "loading all vehicles";
+		"loadVehicles" call _pdw;		
+
+
 
 

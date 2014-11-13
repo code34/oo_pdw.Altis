@@ -31,7 +31,14 @@
 	You can share, modify, distribute this script but don't remove the licence and the name of the original author
 
 	logs:
-		0.2 - Fix typo error, fix adduniform
-		0.1 - OO PDW - first release
+		0.4	- re factory saveUnit, loadUnit, clearUnit
+			- fix saveVehicle, loadVehicle
+			- add saveVehicles, loadVehicles
+			- add more doc
+		0.3 	- fix function name
+			- fix reload weapon
+			- fix example code
+		0.2 	- Fix typo error, fix adduniform
+		0.1 	- OO PDW - first release
 
 
