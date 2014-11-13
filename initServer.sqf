@@ -27,8 +27,8 @@
 
 		sleep 2;
 
-		hint "loading all vehicles";
-		"loadObjects" call _pdw;		
+		_objects = "loadObjects" call _pdw;
+		hint format ["loading all vehicles %1", _objects];
 
 
 
