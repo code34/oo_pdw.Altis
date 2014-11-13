@@ -68,7 +68,7 @@ class Mission
 	};
 	class Vehicles
 	{
-		items=2;
+		items=3;
 		class Item0
 		{
 			position[]={14704.614,17.91,16767.375};
@@ -90,6 +90,15 @@ class Mission
 			skill=0.60000002;
 			text="vehicle2";
 			description="toto";
+		};
+		class Item2
+		{
+			position[]={14707.766,17.91,16753.561};
+			id=3;
+			side="EMPTY";
+			vehicle="Land_InfoStand_V1_F";
+			skill=0.60000002;
+			text="ammo1";
 		};
 	};
 };
