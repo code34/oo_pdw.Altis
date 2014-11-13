@@ -21,16 +21,12 @@
 	#include "oop.h"
 
 	CLASS("OO_PDW")
-		PRIVATE VARIABLE("array","objects");
-		
 		PUBLIC FUNCTION("","constructor") { 
 			private ["_array"];
 			if !(isClass(configFile >> "cfgPatches" >> "inidbi")) exitwith { 
 				MEMBER("ToLog", "PDW: requires INIDBI");
 			};
 			[] call compilefinal preProcessFile "\inidbi\init.sqf";
-			_array = [];
-			MEMBER("objects", _array);
 		};
 
 		PUBLIC FUNCTION("","getObjects") FUNC_GETVAR("objects");
@@ -69,13 +65,16 @@
 		};
 
 		PUBLIC FUNCTION("","loadObjects") {
-			private ["_name", "_counter"];
+			private ["_name", "_counter", "_object","_objects"];
 			_counter = [missionName, "object", "pdw_objects","SCALAR"] call iniDB_read;
+			_objects = [];
 			for "_x" from 0 to _counter step 1 do {
 				_name = format ["PDW_OBJECTS_%1", _x];
-				MEMBER("loadObject", _name);
+				_object = MEMBER("loadObject", _name);
+				_objects = _objects + [_object];
 				sleep 0.01;
 			};
+			_objects;
 		};
 
 		PUBLIC FUNCTION("array","saveObject") {
@@ -264,7 +263,5 @@
 			true;
 		};
 
-		PUBLIC FUNCTION("array","deconstructor") { 
-			DELETE_VARIABLE("objects");
-		};
+		PUBLIC FUNCTION("array","deconstructor") { };
 	ENDCLASS;
