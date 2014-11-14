@@ -31,9 +31,9 @@
 	You can share, modify, distribute this script but don't remove the licence and the name of the original author
 
 	logs:
-		0.4	- re factory saveUnit, loadUnit, clearUnit
-			- fix saveVehicle, loadVehicle
-			- add saveVehicles, loadVehicles
+		0.4	- re factory saveUnit, loadUnit, saveObject, loadObject
+			- add saveObjects, loadObjects
+			- add saveInventory, loadInventory, clearInventory
 			- add more doc
 		0.3 	- fix function name
 			- fix reload weapon
