@@ -36,7 +36,7 @@
 			diag_log _this;
 		};
 
-		PUBLIC FUNCTION("object","clearUnit") {
+		PUBLIC FUNCTION("object","clearInventory") {
 			removeallweapons _this;
 			removeGoggles _this;
 			removeHeadgear _this;
@@ -53,6 +53,17 @@
 			clearBackpackCargoGlobal _this;
 		};
 
+		PUBLIC FUNCTION("","saveGroups") {
+			private ["_name", "_counter"];
+			{
+				_save = [format ["PDW_UNIT_%1", _foreachindex], _x];
+				MEMBER("saveUnit", _save);
+				_counter = _foreachindex;
+				sleep 0.01;
+			}foreach allGroups;
+			_result = [missionName, "object", "pdw_groups", _counter] call iniDB_write;
+		};
+
 		PUBLIC FUNCTION("","saveObjects") {
 			private ["_name", "_counter"];
 			{
@@ -66,6 +77,7 @@
 
 		PUBLIC FUNCTION("","loadObjects") {
 			private ["_name", "_counter", "_object","_objects"];
+			
 			_counter = [missionName, "object", "pdw_objects","SCALAR"] call iniDB_read;
 			_objects = [];
 			for "_x" from 0 to _counter step 1 do {
@@ -144,44 +156,93 @@
 			_object;
 		};
 
-		PUBLIC FUNCTION("object","saveUnit") {
-			private ["_DB", "_result", "_array"];
-			_DB = format ["%1", getplayeruid _this];
-			_array = [
-				(headgear _this), 
-				(goggles _this), 
-				(uniform _this), 
-				(UniformItems _this), 
-				(vest _this), 
-				(VestItems _this), 
-				(backpack _this), 
-				(backpackItems _this), 
-				(primaryWeapon _this), 
-				(primaryWeaponItems _this),
-				(primaryWeaponMagazine _this),
-				(secondaryWeapon _this),
-				(secondaryWeaponItems _this),
-				(secondaryWeaponMagazine _this),
-				(handgunWeapon _this),
-				(handgunItems _this),
-				(handgunMagazine _this),
-				(assignedItems _this),
-				(getposatl _this),
-				(damage _this),
-				(getdir _this)
-			];
-			_result = [_DB, "player", "inventory", _array] call iniDB_write;
+		PUBLIC FUNCTION("array","saveUnit") {
+			private ["_name", "_object", "_result", "_array"];
+
+			_name = _this select 0;
+			_object = _this select 1;
+			
+			if (isnil "_name") exitwith { 
+				MEMBER("ToLog", "PDW: require a unit name to saveUnit");
+			};
+
+			_array = [(typeof _object), (getpos _object), (getdir _object), (getdammage _object)];
+			
+			_result = [missionName, "unit", _name, _array] call iniDB_write;
 		};
 
-		PUBLIC FUNCTION("object","loadUnit") {
-			private ["_DB", "_array", "_headgear", "_goggles", "_uniform", "_uniformitems", "_vest", "_vestitems", "_backpack", "_backpackitems", "_primaryweapon", "_primaryweaponitems", "_primaryweaponmagazine", "_secondaryweapon", "_secondaryweaponitems", "_secondaryweaponmagazine", "_handgun", "_handgunweaponitems", "_handgunweaponmagazine", "_assigneditems", "_position", "_damage", "_dir"];
+		PUBLIC FUNCTION("string","loadUnit") {
+			private ["_name", "_array", "_position", "_damage", "_dir", "_typeof", "_unit"];
 
-			_DB = format ["%1", getplayeruid _this];
-			if!(_DB call iniDB_exists) exitwith {false;};
+			_name = _this;
 
-			MEMBER("ClearPlayer", _this);
+			if (isnil "_name") exitwith { 
+				MEMBER("ToLog", "PDW: require a unit name to loadUnit");
+			};
 
-			_array = [_DB, "player", "inventory","ARRAY"] call iniDB_read;
+			_array = [missionName, "unit", _name,"ARRAY"] call iniDB_read;
+			if(_array isequalto "") exitwith {false};	
+
+			_typeof 	= _array select 0;
+			_position	= _array select 1;
+			_dir		= _array select 2;
+			_damage 	= _array select 3;
+
+			_unit = createVehicle [_typeof, _position,[], 0, "NONE"];
+			_unit setpos _position;
+			_unit setdir _dir;
+			_unit setdammage _damage;
+			_unit;
+		};
+
+		PUBLIC FUNCTION("array","saveInventory") {
+			private ["_name", "_object", "_result", "_array"];
+
+			_name = _this select 0;
+			_object = _this select 1;
+			
+			if (isnil "_name") exitwith { 
+				MEMBER("ToLog", "PDW: require a unit name to saveUnit");
+			};
+
+			_array = [
+				(headgear _object), 
+				(goggles _object), 
+				(uniform _object), 
+				(UniformItems _object), 
+				(vest _object), 
+				(VestItems _object), 
+				(backpack _object), 
+				(backpackItems _object), 
+				(primaryWeapon _object), 
+				(primaryWeaponItems _object),
+				(primaryWeaponMagazine _object),
+				(secondaryWeapon _object),
+				(secondaryWeaponItems _object),
+				(secondaryWeaponMagazine _object),
+				(handgunWeapon _object),
+				(handgunItems _object),
+				(handgunMagazine _object),
+				(assignedItems _object)
+			];
+			_result = [missionName, "inventory", _name, _array] call iniDB_write;
+		};
+
+		PUBLIC FUNCTION("array","loadInventory") {
+			private ["_name", "_array", "_headgear", "_goggles", "_uniform", "_uniformitems", "_vest", "_vestitems", "_backpack", "_backpackitems", "_primaryweapon", "_primaryweaponitems", "_primaryweaponmagazine", "_secondaryweapon", "_secondaryweaponitems", "_secondaryweaponmagazine", "_handgun", "_handgunweaponitems", "_handgunweaponmagazine", "_assigneditems", "_position", "_damage", "_dir"];
+
+			_name = _this select 0;
+			_object = _this select 1;
+
+			if (isnil "_name") exitwith { 
+				MEMBER("ToLog", "PDW: require a unit name to loadUnit");
+			};
+
+			MEMBER("ClearInventory", _object);
+
+			_array = [missionName, "inventory", _name,"ARRAY"] call iniDB_read;
+			if(_array isequalto "") exitwith {false};	
+
 			_headgear = _array select 0;
 			_goggles = _array select 1;
 			_uniform = _array select 2;
@@ -200,66 +261,60 @@
 			_handgunweaponitems = _array select 15;
 			_handgunweaponmagazine = _array select 16;
 			_assigneditems = _array select 17;
-			_position = _array select 18;
-			_damage = _array select 19;
-			_dir = _array select 20;
 
-			_this setposatl _position;
-			_this setdamage _damage;
-			_this setdir _dir;
-			_this addHeadgear _headgear;
-			_this forceAddUniform _uniform;
-			_this addGoggles _goggles;
-			_this addVest _vest;
-			_this addweapon _primaryweapon;
-			_this addweapon _secondaryweapon;
-			_this addweapon _handgunweapon;
+			_object addHeadgear _headgear;
+			_object forceAddUniform _uniform;
+			_object addGoggles _goggles;
+			_object addVest _vest;
+			_object addweapon _primaryweapon;
+			_object addweapon _secondaryweapon;
+			_object addweapon _handgunweapon;
 
 			{
-				_this addItemToUniform _x;
+				_object addItemToUniform _x;
 			}foreach _uniformitems;
 	
 			{
-				_this addItemToVest _x;
+				_object addItemToVest _x;
 			}foreach _vestitems;
 	
 			if(format["%1", _backpack] != "") then {
-				_this addbackpack _backpack;
+				_object addbackpack _backpack;
 				{
-					_this addItemToBackpack _x;
+					_object addItemToBackpack _x;
 				} foreach _backpackitems;
 			};
 	
 			{
-				_this addMagazine _x;
+				_object addMagazine _x;
 			} foreach _primaryweaponmagazine;
 
 			{
-				_this addPrimaryWeaponItem _x;
+				_object addPrimaryWeaponItem _x;
 			} foreach _primaryweaponitems;
 	
 			{
-				_this addMagazine _x;
+				_object addMagazine _x;
 			} foreach _secondaryweaponmagazine;
 	
 			{
-				_this addSecondaryWeaponItem _x;
+				_object addSecondaryWeaponItem _x;
 			} foreach _secondaryweaponitems;
 	
 	
 			{
-				_this addMagazine _x;
+				_object addMagazine _x;
 			} foreach _handgunweaponmagazine;
 	
 			{
-				_this addHandgunItem _x;
+				_object addHandgunItem _x;
 			} foreach _handgunweaponitems;
 	
 			{
-				_this additem _x;
-				_this assignItem _x;
+				_object additem _x;
+				_object assignItem _x;
 			} foreach _assigneditems;
-			if (needReload _this == 1) then {reload _this};
+			if (needReload _object == 1) then {reload _object};
 			true;
 		};
 
