@@ -32,17 +32,8 @@
 
 
 /*
-	Function: = ["clearUnit", _player] call OO_PDW;
-	Remove all the equipement
-	
-	Parameters:
-		_player - man object
-	
-*/
-
-/*
 	Function: = ["saveUnit", _player] call OO_PDW;
-	Save player life, position and equipement
+	Save unit position, damage, dir
 	
 	Parameters:
 		_player - player man object
@@ -51,10 +42,39 @@
 
 /*
 	Function: = ["loadUnit", _player] call OO_PDW;
-	Load player life, position and equipement
+	Load unit position, damage, dir
 	
 	Parameters:
 		_player - player man object
+	
+*/
+
+/*
+	Function: = ["loadInventory", [_name, _unit]] call OO_PDW;
+	Load all the equipment
+	
+	Parameters:
+		_name - preset name
+		_unit - unit which load inventory
+	
+*/
+
+/*
+	Function: = ["saveInventory", [_name, _unit]] call OO_PDW;
+	Save all the equipment
+	
+	Parameters:
+		_name : preset name
+		_unit :  unit which save inventory
+	
+*/
+
+/*
+	Function: = ["clearInventory", _unit] call OO_PDW;
+	Remove all the equipement
+	
+	Parameters:
+		_unit : unit which clear inventory
 	
 */
 
