@@ -28,10 +28,7 @@
 
 		sleep 2;
 		hint "Delete all objects";
-
-		deletevehicle vehicle1;
-		deletevehicle vehicle2;
-		deletevehicle ammo1;
+		{deletevehicle _x;}foreach vehicles;
 
 		sleep 2;
 		
