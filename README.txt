@@ -31,6 +31,8 @@
 	You can share, modify, distribute this script but don't remove the licence and the name of the original author
 
 	logs:
+		0.5	- add drivers support
+			- add profilename support
 		0.4	- re factory saveUnit, loadUnit, saveObject, loadObject
 			- add saveObjects, loadObjects
 			- add saveInventory, loadInventory, clearInventory
