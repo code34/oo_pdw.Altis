@@ -21,15 +21,62 @@
 	#include "oop.h"
 
 	CLASS("OO_PDW")
-		PUBLIC FUNCTION("","constructor") { 
+		PRIVATE VARIABLE("string","driver");
+		PUBLIC FUNCTION("string","constructor") { 
 			private ["_array"];
 			if !(isClass(configFile >> "cfgPatches" >> "inidbi")) exitwith { 
 				MEMBER("ToLog", "PDW: requires INIDBI");
 			};
 			[] call compilefinal preProcessFile "\inidbi\init.sqf";
+			MEMBER("driver", _this);
 		};
 
 		PUBLIC FUNCTION("","getObjects") FUNC_GETVAR("objects");
+
+		PRIVATE FUNCTION("string","read") {
+			private ["_driver", "_key"];
+			
+			_key = _this;
+
+			_driver = MEMBER("driver", nil);
+			switch (_driver) do {
+				case "inidbi": {
+					_array = [missionName, "pdw", _key] call iniDB_read;
+				};
+
+				case "profile": {
+					_array = profileNamespace getVariable _key;
+				};
+
+				default {
+
+				};
+			};
+		};
+
+		PRIVATE FUNCTION("array","write") {
+			private ["_driver", "_key", "_array"];
+			
+			_key = _this select 0;
+			_array = _this select 1;
+
+			_driver = MEMBER("driver", nil);
+
+			switch (_driver) do {
+				case "inidbi": {
+					[missionName, "pdw", _key, _array] call iniDB_write;
+				};
+
+				case "profile": {
+					profileNamespace setVariable [_key, _array];
+					saveProfileNamespace;
+				};
+
+				default {
+
+				};
+			};
+		};		
 
 		PUBLIC FUNCTION("string","toLog") {
 			hint _this;
