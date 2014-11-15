@@ -31,31 +31,31 @@
 			MEMBER("driver", _this);
 		};
 
-		PUBLIC FUNCTION("","getObjects") FUNC_GETVAR("objects");
-
-		PRIVATE FUNCTION("string","read") {
-			private ["_driver", "_key"];
+		PRIVATE FUNCTION("array","read") {
+			private ["_driver", "_key", "_result"];
 			
-			_key = _this;
+			_key = _this select 0;
+			_type = _this select 1;
 
 			_driver = MEMBER("driver", nil);
 			switch (_driver) do {
 				case "inidbi": {
-					_array = [missionName, "pdw", _key] call iniDB_read;
+					_result = [missionName, "pdw", _key, _type] call iniDB_read;
 				};
 
 				case "profile": {
-					_array = profileNamespace getVariable _key;
+					_result = profileNamespace getVariable _key;
 				};
 
 				default {
 
 				};
 			};
+			_result;
 		};
 
 		PRIVATE FUNCTION("array","write") {
-			private ["_driver", "_key", "_array"];
+			private ["_driver", "_key", "_array", "_result"];
 			
 			_key = _this select 0;
 			_array = _this select 1;
@@ -64,18 +64,20 @@
 
 			switch (_driver) do {
 				case "inidbi": {
-					[missionName, "pdw", _key, _array] call iniDB_write;
+					_result = [missionName, "pdw", _key, _array] call iniDB_write;
 				};
 
 				case "profile": {
 					profileNamespace setVariable [_key, _array];
 					saveProfileNamespace;
+					_result = true;
 				};
 
 				default {
 
 				};
 			};
+			_result;
 		};		
 
 		PUBLIC FUNCTION("string","toLog") {
@@ -101,34 +103,37 @@
 		};
 
 		PUBLIC FUNCTION("","saveGroups") {
-			private ["_name", "_counter"];
+			private ["_save", "_counter"];
 			{
 				_save = [format ["PDW_UNIT_%1", _foreachindex], _x];
 				MEMBER("saveUnit", _save);
 				_counter = _foreachindex;
 				sleep 0.01;
 			}foreach allGroups;
-			_result = [missionName, "object", "pdw_groups", _counter] call iniDB_write;
+			_result = [missionName, "pdw", "pdw_groups", _counter] call iniDB_write;
 		};
 
 		PUBLIC FUNCTION("","saveObjects") {
-			private ["_name", "_counter"];
+			private ["_save", "_counter"];
 			{
-				_save = [format ["PDW_OBJECTS_%1", _foreachindex], _x];
+				_save = [format ["objects_%1", _foreachindex], _x];
 				MEMBER("saveObject", _save);
 				_counter = _foreachindex;
 				sleep 0.01;
 			}foreach vehicles;
-			_result = [missionName, "object", "pdw_objects", _counter] call iniDB_write;
+			_save = ["pdw_objects", _counter];
+			MEMBER("write", _save);
 		};
 
 		PUBLIC FUNCTION("","loadObjects") {
 			private ["_name", "_counter", "_object","_objects"];
 			
-			_counter = [missionName, "object", "pdw_objects","SCALAR"] call iniDB_read;
+			_save = ["pdw_objects", "SCALAR"];
+			_counter = MEMBER("read", _save);
+
 			_objects = [];
 			for "_x" from 0 to _counter step 1 do {
-				_name = format ["PDW_OBJECTS_%1", _x];
+				_name = format ["objects_%1", _x];
 				_object = MEMBER("loadObject", _name);
 				_objects = _objects + [_object];
 				sleep 0.01;
@@ -146,6 +151,8 @@
 				MEMBER("ToLog", "PDW: require a object name to saveObject");
 			};
 
+			_name = "pdw_object_" + _name;
+
 			_array = [
 				(typeof _object),
 				(getpos _object),
@@ -156,7 +163,9 @@
 				(getItemCargo _object),
 				(getBackpackCargo _object)
 				];
-			_result = [missionName, "object", _name, _array] call iniDB_write;
+			
+			_save = [_name, _array];
+			_result = MEMBER("write", _save);
 		};
 
 		PUBLIC FUNCTION("string","loadObject") {
@@ -167,7 +176,12 @@
 			if (isnil "_name") exitwith { 
 				MEMBER("ToLog", "PDW: require a object name to loadObject");
 			};
-			_array = [missionName, "object", _name,"ARRAY"] call iniDB_read;
+
+			_name = "pdw_object_" + _name;
+
+			_save = [_name, "ARRAY"];
+			_array = MEMBER("read", _save);
+
 			if(_array isequalto "") exitwith {false};
 
 			_object = createVehicle [(_array select 0), (_array select 1), [], 0, "NONE"];
@@ -213,9 +227,12 @@
 				MEMBER("ToLog", "PDW: require a unit name to saveUnit");
 			};
 
+			_name = "pdw_unit_" + _name;
+
 			_array = [(typeof _object), (getpos _object), (getdir _object), (getdammage _object)];
 			
-			_result = [missionName, "unit", _name, _array] call iniDB_write;
+			_save = [_name, _array];
+			MEMBER("write", _save);
 		};
 
 		PUBLIC FUNCTION("string","loadUnit") {
@@ -227,7 +244,10 @@
 				MEMBER("ToLog", "PDW: require a unit name to loadUnit");
 			};
 
-			_array = [missionName, "unit", _name,"ARRAY"] call iniDB_read;
+			_name = "pdw_unit_" + _name;			
+
+			_save = [_name, "ARRAY"];
+			_array = MEMBER("read", _save);
 			if(_array isequalto "") exitwith {false};	
 
 			_typeof 	= _array select 0;
@@ -252,6 +272,8 @@
 				MEMBER("ToLog", "PDW: require a unit name to saveUnit");
 			};
 
+			_name = "pdw_inventory_" + _name;			
+
 			_array = [
 				(headgear _object), 
 				(goggles _object), 
@@ -272,7 +294,9 @@
 				(handgunMagazine _object),
 				(assignedItems _object)
 			];
-			_result = [missionName, "inventory", _name, _array] call iniDB_write;
+
+			_save = [_name, _array];
+			MEMBER("write", _save);
 		};
 
 		PUBLIC FUNCTION("array","loadInventory") {
@@ -285,9 +309,12 @@
 				MEMBER("ToLog", "PDW: require a unit name to loadUnit");
 			};
 
+			_name = "pdw_inventory_" + _name;			
+
 			MEMBER("ClearInventory", _object);
 
-			_array = [missionName, "inventory", _name,"ARRAY"] call iniDB_read;
+			_save = [_name, "ARRAY"];
+			_array = MEMBER("read", _save);
 			if(_array isequalto "") exitwith {false};	
 
 			_headgear = _array select 0;

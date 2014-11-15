@@ -2,7 +2,7 @@
 
 		sleep 2;
 
-		 _pdw = ["new"] call OO_PDW;
+		 _pdw = ["new", "inidbi"] call OO_PDW;
 		["saveUnit", [name player, player]] call _pdw;
 		["saveInventory", [name player, player]] call _pdw;
 
