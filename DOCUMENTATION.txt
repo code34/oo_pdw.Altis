@@ -19,117 +19,116 @@
 	*/
 
 
+	/*
+		Function:  _pdw = ["new", "inidbi"] call OO_PDW;
+		Create a new pdw object with a specific driver
+		inidbi requires inidbi addons (only avalaible on windows)
+		
+		Parameters:
+			string - can be "inidbi" or "profile" 
+		
+	*/
+
+	/*
+		Function: = ["savePlayer", _player] call OO_PDW;
+		Save playable unit position, damage, dir
+		
+		Parameters:
+			_player - playable unit object
+		
+	*/
+
+	/*
+		Function: = ["loadPlayer", _player] call OO_PDW;
+		Load playable unit position, damage, dir
+		
+		Parameters:
+			_player - playable unit object
+		
+	*/
 
 
-/*
-	Function:  _pdw = ["new", "inidbi"] call OO_PDW;
-	Create a new pdw object with a specific driver
-	
-	Parameters:
-		string - can be "inidbi" or "profile" 
-	
-*/
+	/*
+		Function: = ["saveUnit", _unit] call OO_PDW;
+		Save unit type, position, damage, dir
+		
+		Parameters:
+			_unit - man object
+		
+	*/
 
-/*
-	Function: = ["savePlayer", _player] call OO_PDW;
-	Save playable unit position, damage, dir
-	
-	Parameters:
-		_player - playable unit object
-	
-*/
+	/*
+		Function: = ["loadUnit", _unit] call OO_PDW;
+		Load unit type, position, damage, dir
+		
+		Parameters:
+			_unit - player man object
+		
+	*/
 
-/*
-	Function: = ["loadPlayer", _player] call OO_PDW;
-	Load playable unit position, damage, dir
-	
-	Parameters:
-		_player - playable unit object
-	
-*/
+	/*
+		Function: = ["loadInventory", [_name, _unit]] call OO_PDW;
+		Load all the equipment
+		
+		Parameters:
+			_name - preset name
+			_unit - unit which load inventory
+		
+	*/
 
+	/*
+		Function: = ["saveInventory", [_name, _unit]] call OO_PDW;
+		Save all the equipment
+		
+		Parameters:
+			_name : preset name
+			_unit :  unit which save inventory
+		
+	*/
 
-/*
-	Function: = ["saveUnit", _unit] call OO_PDW;
-	Save unit type, position, damage, dir
-	
-	Parameters:
-		_unit - man object
-	
-*/
+	/*
+		Function: = ["clearInventory", _unit] call OO_PDW;
+		Remove all the equipement
+		
+		Parameters:
+			_unit : unit object which clear inventory
+		
+	*/
 
-/*
-	Function: = ["loadUnit", _unit] call OO_PDW;
-	Load unit type, position, damage, dir
-	
-	Parameters:
-		_unit - player man object
-	
-*/
+	/*
+		Function: = ["saveObject", [_name, _object]] call OO_PDW;
+		save object, and all its cargo
+		
+		Parameters:
+			_name : string
+			_object :  object
+		
+	*/
 
-/*
-	Function: = ["loadInventory", [_name, _unit]] call OO_PDW;
-	Load all the equipment
-	
-	Parameters:
-		_name - preset name
-		_unit - unit which load inventory
-	
-*/
+	/*
+		Function: = ["loadObject", _name] call OO_PDW;
+		load object and return object loaded
+		
+		Parameters:
+			_name : string
+		
+	*/
 
-/*
-	Function: = ["saveInventory", [_name, _unit]] call OO_PDW;
-	Save all the equipment
-	
-	Parameters:
-		_name : preset name
-		_unit :  unit which save inventory
-	
-*/
-
-/*
-	Function: = ["clearInventory", _unit] call OO_PDW;
-	Remove all the equipement
-	
-	Parameters:
-		_unit : unit object which clear inventory
-	
-*/
-
-/*
-	Function: = ["saveObject", [_name, _object]] call OO_PDW;
-	save object, and all its cargo
-	
-	Parameters:
-		_name : string
-		_object :  object
-	
-*/
-
-/*
-	Function: = ["loadObject", _name] call OO_PDW;
-	load object and return object loaded
-	
-	Parameters:
-		_name : string
-	
-*/
-
-/*
-	Function: = "saveObjects" call OO_PDW;
-	Save all objects
-	
-	Parameters:
-		none
-	
-*/
+	/*
+		Function: = "saveObjects" call OO_PDW;
+		Save all objects
+		
+		Parameters:
+			none
+		
+	*/
 
 
-/*
-	Function: = "loadObjects" call OO_PDW;
-	Load and return all objects loaded
-	
-	Parameters:
-		none
-	
-*/
+	/*
+		Function: = "loadObjects" call OO_PDW;
+		Load and return all objects loaded
+		
+		Parameters:
+			none
+		
+	*/
