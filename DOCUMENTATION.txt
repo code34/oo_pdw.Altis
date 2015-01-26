@@ -22,30 +22,48 @@
 
 
 /*
-	Function: _pdw = ["new"] call OO_PDW;
-	Create a new pdw object
+	Function:  _pdw = ["new", "inidbi"] call OO_PDW;
+	Create a new pdw object with a specific driver
 	
 	Parameters:
-		none 
+		string - can be "inidbi" or "profile" 
+	
+*/
+
+/*
+	Function: = ["savePlayer", _player] call OO_PDW;
+	Save playable unit position, damage, dir
+	
+	Parameters:
+		_player - playable unit object
+	
+*/
+
+/*
+	Function: = ["loadPlayer", _player] call OO_PDW;
+	Load playable unit position, damage, dir
+	
+	Parameters:
+		_player - playable unit object
 	
 */
 
 
 /*
-	Function: = ["saveUnit", _player] call OO_PDW;
-	Save unit position, damage, dir
+	Function: = ["saveUnit", _unit] call OO_PDW;
+	Save unit type, position, damage, dir
 	
 	Parameters:
-		_player - player man object
+		_unit - man object
 	
 */
 
 /*
-	Function: = ["loadUnit", _player] call OO_PDW;
-	Load unit position, damage, dir
+	Function: = ["loadUnit", _unit] call OO_PDW;
+	Load unit type, position, damage, dir
 	
 	Parameters:
-		_player - player man object
+		_unit - player man object
 	
 */
 
@@ -74,7 +92,7 @@
 	Remove all the equipement
 	
 	Parameters:
-		_unit : unit which clear inventory
+		_unit : unit object which clear inventory
 	
 */
 
