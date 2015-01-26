@@ -114,6 +114,8 @@
 			_result = [missionName, "pdw", "pdw_groups", _counter] call iniDB_write;
 		};
 
+		
+
 		PUBLIC FUNCTION("","saveObjects") {
 			private ["_save", "_counter"];
 			{
@@ -343,7 +345,7 @@
 		};
 
 		PUBLIC FUNCTION("array","loadInventory") {
-			private ["_name", "_array", "_headgear", "_goggles", "_uniform", "_uniformitems", "_vest", "_vestitems", "_backpack", "_backpackitems", "_primaryweapon", "_primaryweaponitems", "_primaryweaponmagazine", "_secondaryweapon", "_secondaryweaponitems", "_secondaryweaponmagazine", "_handgun", "_handgunweaponitems", "_handgunweaponmagazine", "_assigneditems", "_position", "_damage", "_dir"];
+			private ["_name", "_array", "_headgear", "_goggles", "_uniform", "_uniformitems", "_vest", "_vestitems", "_backpack", "_backpackitems", "_primaryweapon", "_primaryweaponitems", "_primaryweaponmagazine", "_secondaryweapon", "_secondaryweaponitems", "_secondaryweaponmagazine", "_handgun", "_handgunweaponitems", "_handgunweaponmagazine", "_assigneditems", "_position", "_damage", "_dir", "_object"];
 
 			_name = _this select 0;
 			_object = _this select 1;
@@ -462,5 +464,7 @@
 			true;
 		};
 
-		PUBLIC FUNCTION("array","deconstructor") { };
+		PUBLIC FUNCTION("","deconstructor") { 
+			DELETE_VARIABLE("driver");
+		};
 	ENDCLASS;
