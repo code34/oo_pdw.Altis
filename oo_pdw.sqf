@@ -23,11 +23,12 @@
 	CLASS("OO_PDW")
 		PRIVATE VARIABLE("string","driver");
 		PUBLIC FUNCTION("string","constructor") { 
-			private ["_array"];
-			if !(isClass(configFile >> "cfgPatches" >> "inidbi")) exitwith { 
-				MEMBER("ToLog", "PDW: requires INIDBI");
+			if(_this == "inidbi") then {
+				if !(isClass(configFile >> "cfgPatches" >> "inidbi")) exitwith { 
+					MEMBER("ToLog", "PDW: requires INIDBI");
+				};
+				call compilefinal preProcessFile "\inidbi\init.sqf";
 			};
-			[] call compilefinal preProcessFile "\inidbi\init.sqf";
 			MEMBER("driver", _this);
 		};
 
@@ -215,6 +216,48 @@
 				_object addBackpackCargoGlobal [_x, _count select _foreachindex];
 			}foreach _items;
 			_object;
+		};
+
+		PUBLIC FUNCTION("object","savePlayer") {
+			private ["_name", "_object", "_result", "_array"];
+
+			_object = _this;
+			_name = name _this;
+			
+			if (isnil "_name") exitwith { 
+				MEMBER("ToLog", "PDW: require a unit name to savePlayer");
+			};
+
+			_name = "pdw_unit_" + _name;
+
+			_array = [(getpos _object), (getdir _object), (getdammage _object)];
+			
+			_save = [_name, _array];
+			MEMBER("write", _save);
+		};
+
+		PUBLIC FUNCTION("object","loadPlayer") {
+			private ["_name", "_array", "_position", "_damage", "_dir", "_typeof", "_unit"];
+
+			_name = name _this;
+
+			if (isnil "_name") exitwith { 
+				MEMBER("ToLog", "PDW: require a unit name to loadUnit");
+			};
+
+			_name = "pdw_unit_" + _name;			
+
+			_save = [_name, "ARRAY"];
+			_array = MEMBER("read", _save);
+			if(_array isequalto "") exitwith {false};	
+
+			_position	= _array select 0;
+			_dir		= _array select 1;
+			_damage 	= _array select 2;
+
+			_this setpos _position;
+			_this setdir _dir;
+			_this setdammage _damage;
 		};
 
 		PUBLIC FUNCTION("array","saveUnit") {
