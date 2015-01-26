@@ -383,55 +383,82 @@
 			_object forceAddUniform _uniform;
 			_object addGoggles _goggles;
 			_object addVest _vest;
-			_object addweapon _primaryweapon;
-			_object addweapon _secondaryweapon;
-			_object addweapon _handgunweapon;
 
 			{
-				_object addItemToUniform _x;
+				if(_x != "") then {
+					_object addItemToUniform _x;
+				};
 			}foreach _uniformitems;
 	
 			{
-				_object addItemToVest _x;
+				if(_x != "") then {
+					_object addItemToVest _x;
+				};
 			}foreach _vestitems;
 	
 			if(format["%1", _backpack] != "") then {
 				_object addbackpack _backpack;
 				{
-					_object addItemToBackpack _x;
+					if(_x != "") then {
+						_object addItemToBackpack _x;
+					};
 				} foreach _backpackitems;
 			};
 	
 			{
-				_object addMagazine _x;
+				if(_x != "") then {
+					_object addMagazine _x;
+				};
 			} foreach _primaryweaponmagazine;
 
+			//must be after assign items to secure loading mags
+			_object addweapon _primaryweapon;
+	
 			{
-				_object addPrimaryWeaponItem _x;
+				if(_x != "") then {
+					_object addPrimaryWeaponItem _x;
+				};
 			} foreach _primaryweaponitems;
 	
 			{
-				_object addMagazine _x;
+				if(_x != "") then {
+					_object addMagazine _x;
+				};
 			} foreach _secondaryweaponmagazine;
+
+			_object addweapon _secondaryweapon;
 	
 			{
-				_object addSecondaryWeaponItem _x;
+				if(_x != "") then {
+					_object addSecondaryWeaponItem _x;
+				};
 			} foreach _secondaryweaponitems;
 	
 	
 			{
-				_object addMagazine _x;
+				if(_x != "") then {
+					_object addMagazine _x;
+				};
 			} foreach _handgunweaponmagazine;
+
+			_object addweapon _handgunweapon;
 	
 			{
-				_object addHandgunItem _x;
+				if(_x != "") then {
+					_object addHandgunItem _x;
+				};
 			} foreach _handgunweaponitems;
 	
 			{
-				_object additem _x;
-				_object assignItem _x;
+				if(_x != "") then {
+					_object additem _x;
+					_object assignItem _x;
+				};
 			} foreach _assigneditems;
-			if (needReload _object == 1) then {reload _object};
+
+			_object addWeapon "ItemGPS";
+
+			if (needReload player == 1) then {reload player};
 			true;
 		};
 
