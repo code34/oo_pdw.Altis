@@ -1,25 +1,20 @@
-﻿		[] call compilefinal preprocessFileLineNumbers "oo_pdw.sqf";
-
-		sleep 2;
-
+﻿		call compilefinal preprocessFileLineNumbers "oo_pdw.sqf";
+		
 		 _pdw = ["new", "inidbi"] call OO_PDW;
-		["saveUnit", [name player, player]] call _pdw;
+
+		hint "Save player";
+		["savePlayer", player] call _pdw;
 		["saveInventory", [name player, player]] call _pdw;
 
 		sleep 2;
-
-		hint "Restore Unit";
-		_object = ["loadUnit", name player] call _pdw;
-
+		hint "Clear";
+		["clearInventory", player] call _pdw;
+		player setpos [16000,16000];
 		sleep 2;
 
-		hint "Clear inventory";
-		["clearInventory", _object] call _pdw;
-		
-		sleep 2 ;
-
-		hint "Restore Inventory";
-		["loadInventory", [name player, _object]] call _pdw;
+		hint "Restore Player";
+		["loadPlayer", player] call _pdw;
+		["loadInventory", [name player, player]] call _pdw;
 		
 		sleep 2;
 
