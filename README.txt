@@ -33,6 +33,8 @@
 	logs:
 		0.5	- add drivers support
 			- add profilename support
+			- add loadPlayer & savePlayer methods
+			- fix loadInventory method
 		0.4	- re factory saveUnit, loadUnit, saveObject, loadObject
 			- add saveObjects, loadObjects
 			- add saveInventory, loadInventory, clearInventory
