@@ -1,6 +1,9 @@
 ﻿		call compilefinal preprocessFileLineNumbers "oo_pdw.sqf";
 		
+		sleep 2;
+
 		 _pdw = ["new", "inidbi"] call OO_PDW;
+		 ["setFileName", "mydb"] call _pdw;
 
 		hint "Save player";
 		["savePlayer", player] call _pdw;

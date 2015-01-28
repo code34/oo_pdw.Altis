@@ -30,6 +30,15 @@
 	*/
 
 	/*
+		Function: = ["setFileName", "mydb"] call OO_PDW;
+		Set the filename of DB
+		
+		Parameters:
+			string -  filename of the db
+		
+	*/	
+
+	/*
 		Function: = ["savePlayer", _player] call OO_PDW;
 		Save playable unit position, damage, dir
 		
