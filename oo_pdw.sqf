@@ -22,6 +22,8 @@
 
 	CLASS("OO_PDW")
 		PRIVATE VARIABLE("string","driver");
+		PRIVATE VARIABLE("string","filename");
+
 		PUBLIC FUNCTION("string","constructor") { 
 			if(_this == "inidbi") then {
 				if !(isClass(configFile >> "cfgPatches" >> "inidbi")) exitwith { 
@@ -29,19 +31,26 @@
 				};
 				call compilefinal preProcessFile "\inidbi\init.sqf";
 			};
+			MEMBER("filename", "oo_pdw");
 			MEMBER("driver", _this);
 		};
 
+		PUBLIC FUNCTION("string","setFileName") {
+			MEMBER("filename", _this);
+		};
+
 		PRIVATE FUNCTION("array","read") {
-			private ["_driver", "_key", "_result"];
+			private ["_driver", "_key", "_result", "_filename"];
 			
 			_key = _this select 0;
 			_type = _this select 1;
 
 			_driver = MEMBER("driver", nil);
+			_filename = MEMBER("filename", nil);
+
 			switch (_driver) do {
 				case "inidbi": {
-					_result = [missionName, "pdw", _key, _type] call iniDB_read;
+					_result = [_filename, "pdw", _key, _type] call iniDB_read;
 				};
 
 				case "profile": {
@@ -56,16 +65,17 @@
 		};
 
 		PRIVATE FUNCTION("array","write") {
-			private ["_driver", "_key", "_array", "_result"];
+			private ["_driver", "_key", "_array", "_result", "_filename"];
 			
 			_key = _this select 0;
 			_array = _this select 1;
 
 			_driver = MEMBER("driver", nil);
+			_filename = MEMBER("filename", nil);
 
 			switch (_driver) do {
 				case "inidbi": {
-					_result = [missionName, "pdw", _key, _array] call iniDB_write;
+					_result = [_filename, "pdw", _key, _array] call iniDB_write;
 				};
 
 				case "profile": {
@@ -104,18 +114,19 @@
 		};
 
 		PUBLIC FUNCTION("","saveGroups") {
-			private ["_save", "_counter"];
+			private ["_save", "_counter", "_filename"];
+			_filename = MEMBER("filename", nil);
 			{
 				_save = [format ["PDW_UNIT_%1", _foreachindex], _x];
 				MEMBER("saveUnit", _save);
 				_counter = _foreachindex;
 				sleep 0.01;
 			}foreach allGroups;
-			_result = [missionName, "pdw", "pdw_groups", _counter] call iniDB_write;
+			_save = ["pdw_groups", _counter];
+			MEMBER("write", _save);
 		};
 
 		
-
 		PUBLIC FUNCTION("","saveObjects") {
 			private ["_save", "_counter"];
 			{
@@ -224,13 +235,13 @@
 			private ["_name", "_object", "_result", "_array"];
 
 			_object = _this;
-			_name = name _this;
+			_name = getPlayerUID _this;
 			
 			if (isnil "_name") exitwith { 
 				MEMBER("ToLog", "PDW: require a unit name to savePlayer");
 			};
 
-			_name = "pdw_unit_" + _name;
+			_name = format["pdw_unit_%1", getPlayerUID _this];
 
 			_array = [(getpos _object), (getdir _object), (getdammage _object)];
 			
@@ -241,13 +252,13 @@
 		PUBLIC FUNCTION("object","loadPlayer") {
 			private ["_name", "_array", "_position", "_damage", "_dir", "_typeof", "_unit"];
 
-			_name = name _this;
+			_name = getPlayerUID _this;
 
 			if (isnil "_name") exitwith { 
 				MEMBER("ToLog", "PDW: require a unit name to loadUnit");
 			};
 
-			_name = "pdw_unit_" + _name;			
+			_name = format["pdw_unit_%1", getPlayerUID _this];		
 
 			_save = [_name, "ARRAY"];
 			_array = MEMBER("read", _save);
@@ -466,5 +477,6 @@
 
 		PUBLIC FUNCTION("","deconstructor") { 
 			DELETE_VARIABLE("driver");
+			DELETE_VARIABLE("filename");
 		};
 	ENDCLASS;
