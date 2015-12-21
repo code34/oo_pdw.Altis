@@ -1,6 +1,6 @@
 	/*
 	Author: code34 nicolas_boiteux@yahoo.fr
-	Copyright (C) 2014 Nicolas BOITEUX
+	Copyright (C) 2014-2016 Nicolas BOITEUX
 
 	CLASS OO_PDW -  Pesistent Data World
 	
@@ -22,35 +22,31 @@
 
 	CLASS("OO_PDW")
 		PRIVATE VARIABLE("string","driver");
-		PRIVATE VARIABLE("string","filename");
+		PRIVATE VARIABLE("code","inidbi");
 
 		PUBLIC FUNCTION("string","constructor") { 
 			if(_this == "inidbi") then {
-				if !(isClass(configFile >> "cfgPatches" >> "inidbi")) exitwith { 
-					MEMBER("ToLog", "PDW: requires INIDBI");
-				};
-				call compilefinal preProcessFile "\inidbi\init.sqf";
+				_inidbi = ["new", "oo_pdw"] call OO_INIDBI;
+				MEMBER("inidbi", _inidbi);
 			};
-			MEMBER("filename", "oo_pdw");
 			MEMBER("driver", _this);
 		};
 
-		PUBLIC FUNCTION("string","setFileName") {
-			MEMBER("filename", _this);
+		PUBLIC FUNCTION("string","setDbName") {
+			["setDbName", _this] call MEMBER("inidbi", nil);
 		};
 
 		PRIVATE FUNCTION("array","read") {
-			private ["_driver", "_key", "_result", "_filename"];
+			private ["_driver", "_key", "_result", "_default"];
 			
 			_key = _this select 0;
-			_type = _this select 1;
+			_default = _this select 1;
 
 			_driver = MEMBER("driver", nil);
-			_filename = MEMBER("filename", nil);
 
 			switch (_driver) do {
 				case "inidbi": {
-					_result = [_filename, "pdw", _key, _type] call iniDB_read;
+					_result = ["read", ["pdw", _key, _default]] call MEMBER("inidbi", nil);
 				};
 
 				case "profile": {
@@ -58,24 +54,25 @@
 				};
 
 				default {
-
+					_result = false;
 				};
 			};
 			_result;
 		};
 
 		PRIVATE FUNCTION("array","write") {
-			private ["_driver", "_key", "_array", "_result", "_filename"];
+			private ["_driver", "_key", "_array", "_result"];
 			
 			_key = _this select 0;
 			_array = _this select 1;
 
 			_driver = MEMBER("driver", nil);
-			_filename = MEMBER("filename", nil);
+
+			_result = ["write", ["pdw", _key, _array]] call MEMBER("inidbi", nil);
 
 			switch (_driver) do {
 				case "inidbi": {
-					_result = [_filename, "pdw", _key, _array] call iniDB_write;
+					_result = ["write", ["pdw", _key, _array]] call MEMBER("inidbi", nil);
 				};
 
 				case "profile": {
@@ -85,7 +82,7 @@
 				};
 
 				default {
-
+					_result = false;
 				};
 			};
 			_result;
@@ -114,8 +111,7 @@
 		};
 
 		PUBLIC FUNCTION("","saveGroups") {
-			private ["_save", "_counter", "_filename"];
-			_filename = MEMBER("filename", nil);
+			private ["_save", "_counter"];
 			{
 				_save = [format ["PDW_UNIT_%1", _foreachindex], _x];
 				MEMBER("saveUnit", _save);
@@ -142,7 +138,7 @@
 		PUBLIC FUNCTION("","loadObjects") {
 			private ["_name", "_counter", "_object","_objects"];
 			
-			_save = ["pdw_objects", "SCALAR"];
+			_save = ["pdw_objects", 0];
 			_counter = MEMBER("read", _save);
 
 			_objects = [];
@@ -193,7 +189,7 @@
 
 			_name = "pdw_object_" + _name;
 
-			_save = [_name, "ARRAY"];
+			_save = [_name, []];
 			_array = MEMBER("read", _save);
 
 			if(_array isequalto "") exitwith {false};
@@ -260,7 +256,7 @@
 
 			_name = format["pdw_unit_%1", getPlayerUID _this];		
 
-			_save = [_name, "ARRAY"];
+			_save = [_name, []];
 			_array = MEMBER("read", _save);
 			if(_array isequalto "") exitwith {false};	
 
@@ -302,7 +298,7 @@
 
 			_name = "pdw_unit_" + _name;			
 
-			_save = [_name, "ARRAY"];
+			_save = [_name, []];
 			_array = MEMBER("read", _save);
 			if(_array isequalto "") exitwith {false};	
 
@@ -369,7 +365,7 @@
 
 			MEMBER("ClearInventory", _object);
 
-			_save = [_name, "ARRAY"];
+			_save = [_name, []];
 			_array = MEMBER("read", _save);
 			if(_array isequalto "") exitwith {false};	
 
@@ -477,6 +473,6 @@
 
 		PUBLIC FUNCTION("","deconstructor") { 
 			DELETE_VARIABLE("driver");
-			DELETE_VARIABLE("filename");
+			DELETE_VARIABLE("inidbi");
 		};
 	ENDCLASS;
