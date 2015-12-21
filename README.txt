@@ -1,6 +1,6 @@
 	/*
 	Author: code34 nicolas_boiteux@yahoo.fr
-	Copyright (C) 2013 Nicolas BOITEUX
+	Copyright (C) 2013-2016 Nicolas BOITEUX
 
 	CLASS OO_PDW -  Pesistent Data World
 	
@@ -31,6 +31,8 @@
 	You can share, modify, distribute this script but don't remove the licence and the name of the original author
 
 	logs:
+		0.7	- add support inidbi2 DB
+			- refactory setFileName to setDbName
 		0.6	- add  setFileName for inidbi DB
 			- fix save file with inidbi
 			- use UID instead of name of players
