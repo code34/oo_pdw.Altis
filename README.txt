@@ -33,6 +33,8 @@
 	logs:
 		0.7	- add support inidbi2 DB
 			- refactory setFileName to setDbName
+			- only compatible with inidbi2
+			- fix saveObjects method
 		0.6	- add  setFileName for inidbi DB
 			- fix save file with inidbi
 			- use UID instead of name of players

@@ -26,6 +26,9 @@
 
 		PUBLIC FUNCTION("string","constructor") { 
 			if(_this == "inidbi") then {
+				if !(isClass(configFile >> "cfgPatches" >> "inidbi2")) exitwith { 
+					MEMBER("ToLog", "PDW: requires INIDBI2");
+				};
 				_inidbi = ["new", "oo_pdw"] call OO_INIDBI;
 				MEMBER("inidbi", _inidbi);
 			};
@@ -125,12 +128,15 @@
 		
 		PUBLIC FUNCTION("","saveObjects") {
 			private ["_save", "_counter"];
+			_counter = -1;
 			{
-				_save = [format ["objects_%1", _foreachindex], _x];
-				MEMBER("saveObject", _save);
-				_counter = _foreachindex;
+			 	if!((_x isKindOf "MAN") or (_x isKindOf "LOGIC")) then {
+					_counter = _counter + 1;
+					_save = [format ["objects_%1", _counter], _x];
+					MEMBER("saveObject", _save);
+				};
 				sleep 0.01;
-			}foreach vehicles;
+			}foreach (allMissionObjects "All");
 			_save = ["pdw_objects", _counter];
 			MEMBER("write", _save);
 		};
