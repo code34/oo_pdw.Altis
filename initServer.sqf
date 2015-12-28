@@ -23,7 +23,7 @@
 		hint "Save all objects";
 		"saveObjects" call _pdw;
 		sleep 2;
-		
+
 		hint "Delete all objects";
 		{
 			if!(_x isKindOf "MAN") then {
@@ -32,8 +32,8 @@
 		}foreach (allMissionObjects "All");
 		sleep 2;
 		
-		hint format ["Restore all objects %1", _objects];
 		_objects = "loadObjects" call _pdw;
+		hint format ["Restore all objects %1", _objects];
 		
 
 
