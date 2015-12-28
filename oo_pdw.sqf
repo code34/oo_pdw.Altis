@@ -343,7 +343,7 @@
 
 			_save = [_name, []];
 			_array = MEMBER("read", _save);
-			if(_array isequalto []) exitwith {false};	
+			if(_array isequalto []) exitwith {false;};	
 
 			_position	= _array select 0;
 			_dir		= _array select 1;
@@ -352,6 +352,7 @@
 			_this setpos _position;
 			_this setdir _dir;
 			_this setdammage _damage;
+			true;
 		};
 
 		PUBLIC FUNCTION("array","saveUnit") {
