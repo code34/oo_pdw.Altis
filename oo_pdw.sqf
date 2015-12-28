@@ -113,6 +113,16 @@
 			clearBackpackCargoGlobal _this;
 		};
 
+		PUBLIC FUNCTION("","savePlayers") {
+			{
+				if(alive _x) then {
+					["savePlayer", _x] call _pdw;
+					["saveInventory", [name _x, _x]] call _pdw;
+				};
+				sleep 0.001;
+			}foreach allplayers;
+		};
+
 		PUBLIC FUNCTION("","saveGroups") {
 			private ["_data", "_save", "_counter", "_name", "_counter2"];
 			_counter = -1;
@@ -132,7 +142,7 @@
 						};
 					} foreach units _x;
 					_data = [str(side _x), _data];
-					_save = [format ["groups_%1", _counter], _data];
+					_save = [format ["pdw_groups_%1", _counter], _data];
 					MEMBER("write", _save);
 					sleep 0.001;
 				};
@@ -142,14 +152,14 @@
 		};
 
 		PUBLIC FUNCTION("","loadGroups") {
-			private ["_array", "_name", "_counter", "_group", "_units", "_unit", "_id", "_side"];
+			private ["_array", "_name", "_counter", "_group", "_units", "_unit", "_param", "_side"];
 			
 			_save = ["pdw_groups", -1];
 			_counter = MEMBER("read", _save);
 
 			_objects = [];
 			for "_x" from 0 to _counter step 1 do {
-				_name = [format ["groups_%1", _x], []];
+				_name = [format ["pdw_groups_%1", _x], []];
 				_array = MEMBER("read", _name);
 				_side = _array select 0;
 				_units = _array select 1;
@@ -169,14 +179,20 @@
 				};
 
 				{
-					_unit = MEMBER("loadUnit", _x);
+					_param = [_x, _group];
+					_unit = MEMBER("loadUnit", _param);
 					[_unit] joinSilent _group;
-					_id = [_x, _unit];
-					MEMBER("loadInventory", _id);
+					_param = [_x, _unit];
+					MEMBER("loadInventory", _param);
 					sleep 0.001;
 				}foreach _units;
 				sleep 0.001;
 			};
+
+			{
+				if(count (units _x) == 0) then { deleteGroup _x; };
+				sleep 0.001;
+			}foreach allGroups;
 		};
 		
 		PUBLIC FUNCTION("","saveObjects") {
@@ -310,7 +326,7 @@
 			_name = getPlayerUID _this;
 
 			if (isnil "_name") exitwith { 
-				MEMBER("ToLog", "PDW: require a unit name to loadUnit");
+				MEMBER("ToLog", "PDW: require a unit name to loadPlayer");
 			};
 
 			_name = format["pdw_unit_%1", getPlayerUID _this];		
@@ -346,10 +362,11 @@
 			MEMBER("write", _save);
 		};
 
-		PUBLIC FUNCTION("string","loadUnit") {
-			private ["_name", "_array", "_position", "_damage", "_dir", "_typeof", "_unit"];
+		PUBLIC FUNCTION("array","loadUnit") {
+			private ["_name", "_array", "_position", "_damage", "_dir", "_typeof", "_unit", "_group"];
 
-			_name = _this;
+			_name = _this select 0;
+			_group = _this select 1;
 
 			if (isnil "_name") exitwith { 
 				MEMBER("ToLog", "PDW: require a unit name to loadUnit");
@@ -366,7 +383,7 @@
 			_dir		= _array select 2;
 			_damage 	= _array select 3;
 
-			_unit = createVehicle [_typeof, _position,[], 0, "NONE"];
+			_unit = _group createUnit [_typeof, _position, [], 0, "NONE"];
 			_unit setpos _position;
 			_unit setdir _dir;
 			_unit setdammage _damage;
@@ -417,7 +434,7 @@
 			_object = _this select 1;
 
 			if (isnil "_name") exitwith { 
-				MEMBER("ToLog", "PDW: require a unit name to loadUnit");
+				MEMBER("ToLog", "PDW: require a unit name to loadInventory");
 			};
 
 			_name = "pdw_inventory_" + _name;			
