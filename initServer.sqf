@@ -2,37 +2,40 @@
 
 		 _pdw = ["new", "inidbi"] call OO_PDW;
 		
-		hint "Save player";
-		["savePlayer", player] call _pdw;
-		["saveInventory", [name player, player]] call _pdw;
+		 hint "save AI infantry groups";
+		 "saveGroups" call _pdw;
+		 sleep 2;
 
-		sleep 2;
-		hint "Clear";
-		["clearInventory", player] call _pdw;
-		player setpos [16000,16000];
+		 {deletevehicle _x;} foreach allunits;
+
+		 hint "load AI infantry groups";
+		"loadGroups" call _pdw;
+		 sleep 2;
+
+		hint "Save all players";
+		"savePlayers" call _pdw;
 		sleep 2;
 
-		hint "Restore Player";
-		["loadPlayer", player] call _pdw;
-		["loadInventory", [name player, player]] call _pdw;
-		
+		hint "Restore all Players";
+		"loadPlayers" call _pdw;	
 		sleep 2;
 
 		hint "Save all objects";
 		"saveObjects" call _pdw;
-
 		sleep 2;
+		
 		hint "Delete all objects";
 		{
 			if!(_x isKindOf "MAN") then {
 			deletevehicle _x;
 			};
 		}foreach (allMissionObjects "All");
-
 		sleep 2;
 		
-		_objects = "loadObjects" call _pdw;
 		hint format ["Restore all objects %1", _objects];
+		_objects = "loadObjects" call _pdw;
+		
+
 
 		
 
