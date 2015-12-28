@@ -114,17 +114,70 @@
 		};
 
 		PUBLIC FUNCTION("","saveGroups") {
-			private ["_save", "_counter"];
+			private ["_data", "_save", "_counter", "_name", "_counter2"];
+			_counter = -1;
+			_counter2 = -1;
 			{
-				_save = [format ["PDW_UNIT_%1", _foreachindex], _x];
-				MEMBER("saveUnit", _save);
-				_counter = _foreachindex;
-				sleep 0.01;
+				if(!isplayer(leader _x)) then {
+					_counter = _counter + 1;
+					_data  = [];
+					{
+						if(alive _x) then {
+							_counter2 = _counter2 + 1;
+							_name = str(_counter2);
+							_data = _data + [_name];
+							["saveUnit", [_name, _x]] call _pdw;
+							["saveInventory", [_name, _x]] call _pdw;
+							sleep 0.001;
+						};
+					} foreach units _x;
+					_data = [str(side _x), _data];
+					_save = [format ["groups_%1", _counter], _data];
+					MEMBER("write", _save);
+					sleep 0.001;
+				};
 			}foreach allGroups;
 			_save = ["pdw_groups", _counter];
 			MEMBER("write", _save);
 		};
 
+		PUBLIC FUNCTION("","loadGroups") {
+			private ["_array", "_name", "_counter", "_group", "_units", "_unit", "_id", "_side"];
+			
+			_save = ["pdw_groups", -1];
+			_counter = MEMBER("read", _save);
+
+			_objects = [];
+			for "_x" from 0 to _counter step 1 do {
+				_name = [format ["groups_%1", _x], []];
+				_array = MEMBER("read", _name);
+				_side = _array select 0;
+				_units = _array select 1;
+
+				switch (_side) do {
+					case "CIV" : {
+						_group = creategroup civilian;
+					};
+
+					case "GUER" : {
+						_group = creategroup resistance;
+					};
+
+					default {
+						_group = call compile format ["creategroup %1;", _side];
+					};
+				};
+
+				{
+					_unit = MEMBER("loadUnit", _x);
+					[_unit] joinSilent _group;
+					_id = [_x, _unit];
+					MEMBER("loadInventory", _id);
+					sleep 0.001;
+				}foreach _units;
+				sleep 0.001;
+			};
+		};
 		
 		PUBLIC FUNCTION("","saveObjects") {
 			private ["_save", "_counter"];
