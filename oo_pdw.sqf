@@ -123,6 +123,16 @@
 			}foreach allplayers;
 		};
 
+		PUBLIC FUNCTION("","loadPlayers") {
+			{
+				if(alive _x) then {
+					["loadPlayer", _x] call _pdw;
+					["loadInventory", [name _x, _x]] call _pdw;
+				};
+				sleep 0.001;
+			}foreach allplayers;
+		};		
+
 		PUBLIC FUNCTION("","saveGroups") {
 			private ["_data", "_save", "_counter", "_name", "_counter2"];
 			_counter = -1;
@@ -267,7 +277,7 @@
 			_save = [_name, []];
 			_array = MEMBER("read", _save);
 
-			if(_array isequalto "") exitwith {false};
+			if(_array isequalto []) exitwith {false};
 
 			_object = createVehicle [(_array select 0), (_array select 1), [], 0, "NONE"];
 			_object setposatl (_array select 1);
@@ -333,7 +343,7 @@
 
 			_save = [_name, []];
 			_array = MEMBER("read", _save);
-			if(_array isequalto "") exitwith {false};	
+			if(_array isequalto []) exitwith {false};	
 
 			_position	= _array select 0;
 			_dir		= _array select 1;
@@ -376,7 +386,7 @@
 
 			_save = [_name, []];
 			_array = MEMBER("read", _save);
-			if(_array isequalto "") exitwith {false};	
+			if(_array isequalto []) exitwith {false};	
 
 			_typeof 	= _array select 0;
 			_position	= _array select 1;
@@ -439,11 +449,11 @@
 
 			_name = "pdw_inventory_" + _name;			
 
-			MEMBER("ClearInventory", _object);
-
 			_save = [_name, []];
 			_array = MEMBER("read", _save);
-			if(_array isequalto "") exitwith {false};	
+			if(_array isequalto []) exitwith {false};
+
+			MEMBER("ClearInventory", _object);
 
 			_headgear = _array select 0;
 			_goggles = _array select 1;
