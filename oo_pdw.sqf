@@ -260,7 +260,7 @@
 				];
 			
 			_save = [_name, _array];
-			_result = MEMBER("write", _save);
+			MEMBER("write", _save);
 		};
 
 		PUBLIC FUNCTION("string","loadObject") {
