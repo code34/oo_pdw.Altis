@@ -31,6 +31,11 @@
 	You can share, modify, distribute this script but don't remove the licence and the name of the original author
 
 	logs:
+		0.72	- fix return values of methods
+			- add savePlayers/loadPlayers methods
+			- add saveGroups/loadGroups methods
+			- fix initServer.sqf example for MP servers
+			- update documentation
 		0.7	- add support inidbi2 DB
 			- refactory setFileName to setDbName
 			- only compatible with inidbi2
