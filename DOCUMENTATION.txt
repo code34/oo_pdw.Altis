@@ -1,4 +1,4 @@
-	/*
+
 	Author: code34 nicolas_boiteux@yahoo.fr
 	Copyright (C) 2013-2016 Nicolas BOITEUX
 
@@ -16,138 +16,193 @@
 	
 	You should have received a copy of the GNU General Public License
 	along with this program.  If not, see <http://www.gnu.org/licenses/>. 
-	*/
 
+	--------------------------------------------------------------------------------------------------------------
 
-	/*
-		Function:  _pdw = ["new", "inidbi"] call OO_PDW;
-		Create a new pdw object with a specific driver
-		inidbi requires inidbi addons (only avalaible on windows)
+	Function:  _pdw = ["new", "inidbi"] call OO_PDW;
+	Create a new pdw object with a specific driver
+	inidbi requires inidbi addons (only avalaible on windows)
 		
-		Parameters:
-			string - can be "inidbi" or "profile" 
-		
-	*/
+	Parameters:
+		string - can be "inidbi" or "profile" 
 
-	/*
-		Function: = ["setDbName", "mydb"] call OO_PDW;
-		Set the filename of DB
-		N/A for profile
-		
-		Parameters:
-			string -  filename of the db
-		
-	*/	
+	--------------------------------------------------------------------------------------------------------------
 
-	/*
-		Function: = ["savePlayer", _player] call OO_PDW;
-		Save playable unit position, damage, dir
+	Function: ["setDbName", "mydb"] call _pdw;
+	Set the DB name for inidbi (Not avalaible for profile)
 		
-		Parameters:
-			_player - playable unit object
-		
-	*/
+	Parameters:
+		string -  name of the inidbi db
+	
+	Return : nothing
 
-	/*
-		Function: = ["loadPlayer", _player] call OO_PDW;
-		Load playable unit position, damage, dir
-		
-		Parameters:
-			_player - playable unit object
-		
-	*/
+	--------------------------------------------------------------------------------------------------------------
 
+	Function: _bool = ["savePlayer", _player] call _pdw;
+	Save playable unit informations:  position, damage, dir
+		
+	Parameters:
+		_player - playable unit object
 
-	/*
-		Function: = ["saveUnit", _unit] call OO_PDW;
-		Save unit type, position, damage, dir
-		
-		Parameters:
-			_unit - man object
-		
-	*/
+	Return :  True if success
+	--------------------------------------------------------------------------------------------------------------
 
-	/*
-		Function: = ["loadUnit", _unit] call OO_PDW;
-		Load unit type, position, damage, dir
+	Function: _bool = ["loadPlayer", _player] call _pdw;
+	Load playable unit informations : position, damage, dir
 		
-		Parameters:
-			_unit - player man object
-		
-	*/
+	Parameters:
+		_player - playable unit object
 
-	/*
-		Function: = ["loadInventory", [_name, _unit]] call OO_PDW;
-		Load all the equipment
-		
-		Parameters:
-			_name - preset name
-			_unit - unit which load inventory
-		
-	*/
+	Return : True if success
+	--------------------------------------------------------------------------------------------------------------
 
-	/*
-		Function: = ["saveInventory", [_name, _unit]] call OO_PDW;
-		Save all the equipment
+	Function: _bool = ["saveUnit", _unit] call _pdw;
+	Save unit : type, position, damage, dir
 		
-		Parameters:
-			_name : preset name
-			_unit :  unit which save inventory
+	Parameters:
+		_unit - unit object (MAN unit)
+	
+	Return : True if success
+	--------------------------------------------------------------------------------------------------------------
+	
+	Function: _unit = ["loadUnit", [name, group]] call _pdw;
+	Load unit : type, position, damage, dir
 		
-	*/
+	Parameters:
+		name - string name of unit
+		group - group object where the unit have to be restore
+		
+	Return : unit otherwise false;
 
-	/*
-		Function: = ["clearInventory", _unit] call OO_PDW;
-		Remove all the equipement
-		
-		Parameters:
-			_unit : unit object which clear inventory
-		
-	*/
+	--------------------------------------------------------------------------------------------------------------
 
-	/*
-		Function: = ["saveObject", [_name, _object]] call OO_PDW;
-		save object, and all its cargo
+	Function: _bool = ["loadInventory", [_name, _unit]] call _pdw;
+	Load a preset of equipment (all stuffs in backpacks, weapons, etc)
 		
-		Parameters:
-			_name : string
-			_object :  object
-		
-	*/
+	Parameters:
+		_name : string name of the preset
+		_unit : unit object which will load the preset inventory
 
-	/*
-		Function: = ["loadObject", _name] call OO_PDW;
-		load object and return object loaded
-		
-		Parameters:
-			_name : string
-		
-	*/
+	Return : True if success
 
-	/*
-		Function: = "saveObjects" call OO_PDW;
-		Save all objects
-		
-		Parameters:
-			none
-		
-	*/
+	--------------------------------------------------------------------------------------------------------------
 
+	Function: _bool = ["saveInventory", [_name, _unit]] call _pdw;
+	Save in a preset all the equipment of the unit (all stuffs in backpacks, weapons, etc)
+		
+	Parameters:
+		_name : string name of the preset
+		_unit :  unit object which will be used to save the preset inventory
 
-	/*
-		Function: = "loadObjects" call OO_PDW;
-		Load and return all objects loaded
-		
-		Parameters:
-			none
-		
-	*/
+	Return : True if success
 
-	/*
-		Function:  ["delete", _pdw] call OO_PDW;
-		Destroy the pdw object 
+	--------------------------------------------------------------------------------------------------------------		
+	
+	Function:  ["clearInventory", _unit] call _pdw;
+	Remove all the equipement
 		
-		Parameters:
-			object - pdw object
+	Parameters:
+		_unit : unit object where the inventory will be clear
+
+	Return : Nothing
+	
+	--------------------------------------------------------------------------------------------------------------
+
+	Function: ["clearObject", _object] call _pdw;
+	Remove all the cargo
 		
-	*/	
+	Parameters:
+		_object : object where all cargo will be removed
+
+	Return : Nothing
+	
+	--------------------------------------------------------------------------------------------------------------
+
+	Function: "savePlayers" call _pdw;
+	Save all players informations and inventory presets
+		
+	Parameters:
+		nothing
+
+	Return : Nothing
+
+	--------------------------------------------------------------------------------------------------------------
+	
+	Function: "loadPlayers" call _pdw;
+	Load all players informations and inventory presets
+		
+	Parameters:
+		nothing
+
+	Return : Nothing
+			
+	--------------------------------------------------------------------------------------------------------------
+
+	Function: _bool = "saveGroups" call _pdw;
+	Save all AI groups informations and inventory presets
+		
+	Parameters:
+		nothing
+
+	Return : True if success
+
+	--------------------------------------------------------------------------------------------------------------
+
+	Function: "loadGroups" call _pdw;
+	Load all AI groups informations and inventory presets
+		
+	Parameters:
+		nothing
+			
+	Return : Nothing
+
+	--------------------------------------------------------------------------------------------------------------
+
+	Function: "saveObjects" call _pdw;
+	Save all objects informations : type, position, damage
+	
+	Parameters:
+		none
+	
+	Return : True if success
+
+	--------------------------------------------------------------------------------------------------------------
+
+	Function: _array = "loadObjects" call _pdw;
+	Load and return all objects loaded
+		
+	Parameters:
+		none
+
+	Return : array of objects
+		
+	--------------------------------------------------------------------------------------------------------------
+
+	Function: _bool = ["saveObject", [_name, _object]] call _pdw;
+	Save object, and all its cargo
+		
+	Parameters:
+		_name : string name of the object to save
+		_object :  object
+
+	Return : True if success
+
+	--------------------------------------------------------------------------------------------------------------
+
+	Function: _object = ["loadObject", _name] call _pdw;
+	Load object and return object loaded
+		
+	Parameters:
+		_name : string name of the object to load
+	
+	Return : object
+
+	--------------------------------------------------------------------------------------------------------------
+	
+	Function:  ["delete", _pdw] call OO_PDW;
+	Destroy the pdw object 
+		
+	Parameters:
+		object - pdw object
+	
+	Return : nothing
