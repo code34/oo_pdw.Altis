@@ -295,7 +295,7 @@
 			_items = (_array select 5) select 0;
 			_count = (_array select 5) select 1;
 			{
-				_object addMagazineCargoGlobal [_x, _foreachindex];
+				_object addMagazineCargoGlobal [_x, _count select _foreachindex];
 			}foreach _items;
 
 			_items = (_array select 6) select 0;
@@ -422,15 +422,13 @@
 				(VestItems _object), 
 				(backpack _object), 
 				(backpackItems _object), 
+				(magazinesAmmoFull _object),
 				(primaryWeapon _object), 
 				(primaryWeaponItems _object),
-				(primaryWeaponMagazine _object),
 				(secondaryWeapon _object),
 				(secondaryWeaponItems _object),
-				(secondaryWeaponMagazine _object),
 				(handgunWeapon _object),
 				(handgunItems _object),
-				(handgunMagazine _object),
 				(assignedItems _object)
 			];
 
@@ -439,7 +437,7 @@
 		};
 
 		PUBLIC FUNCTION("array","loadInventory") {
-			private ["_name", "_array", "_headgear", "_goggles", "_uniform", "_uniformitems", "_vest", "_vestitems", "_backpack", "_backpackitems", "_primaryweapon", "_primaryweaponitems", "_primaryweaponmagazine", "_secondaryweapon", "_secondaryweaponitems", "_secondaryweaponmagazine", "_handgun", "_handgunweaponitems", "_handgunweaponmagazine", "_assigneditems", "_position", "_damage", "_dir", "_object"];
+			private ["_name", "_array", "_headgear", "_goggles", "_uniform", "_uniformitems", "_vest", "_vestitems", "_backpack", "_backpackitems", "_primaryweapon", "_primaryweaponitems", "_fullmagazine", "_secondaryweapon", "_secondaryweaponitems", "_handgun", "_handgunweaponitems", "_assigneditems", "_position", "_damage", "_dir", "_object"];
 
 			_name = _this select 0;
 			_object = _this select 1;
@@ -464,16 +462,14 @@
 			_vestitems = _array select 5;
 			_backpack = _array select 6;
 			_backpackitems = _array select 7;
-			_primaryweapon = _array select 8;
-			_primaryweaponitems = _array select 9;
-			_primaryweaponmagazine = _array select 10;
+			_fullmagazine = _array select 8;
+			_primaryweapon = _array select 9;
+			_primaryweaponitems = _array select 10;
 			_secondaryweapon = _array select 11;
 			_secondaryweaponitems = _array select 12;
-			_secondaryweaponmagazine = _array select 13;
-			_handgunweapon = _array select 14;
-			_handgunweaponitems = _array select 15;
-			_handgunweaponmagazine = _array select 16;
-			_assigneditems = _array select 17;
+			_handgunweapon = _array select 13;
+			_handgunweaponitems = _array select 14;
+			_assigneditems = _array select 15;
 
 			_object addHeadgear _headgear;
 			_object forceAddUniform _uniform;
@@ -481,13 +477,13 @@
 			_object addVest _vest;
 
 			{
-				if(_x != "") then {
+				if(!(_x isEqualTo "") and (_x isKindOf ["ItemCore", configFile >> "CfgWeapons"] )) then {
 					_object addItemToUniform _x;
 				};
 			}foreach _uniformitems;
 	
 			{
-				if(_x != "") then {
+				if(!(_x isEqualTo "") and (_x isKindOf ["ItemCore", configFile >> "CfgWeapons"] )) then {
 					_object addItemToVest _x;
 				};
 			}foreach _vestitems;
@@ -495,17 +491,17 @@
 			if(format["%1", _backpack] != "") then {
 				_object addbackpack _backpack;
 				{
-					if(_x != "") then {
+					if(!(_x isEqualTo "") and (_x isKindOf ["ItemCore", configFile >> "CfgWeapons"] )) then {
 						_object addItemToBackpack _x;
 					};
 				} foreach _backpackitems;
 			};
 	
 			{
-				if(_x != "") then {
-					_object addMagazine _x;
+				if!(_x isEqualTo "") then {
+					_object addMagazine [_x select 0, _x select 1];
 				};
-			} foreach _primaryweaponmagazine;
+			} foreach _fullmagazine;
 
 			//must be after assign items to secure loading mags
 			_object addweapon _primaryweapon;
@@ -515,12 +511,6 @@
 					_object addPrimaryWeaponItem _x;
 				};
 			} foreach _primaryweaponitems;
-	
-			{
-				if(_x != "") then {
-					_object addMagazine _x;
-				};
-			} foreach _secondaryweaponmagazine;
 
 			_object addweapon _secondaryweapon;
 	
@@ -530,12 +520,6 @@
 				};
 			} foreach _secondaryweaponitems;
 	
-	
-			{
-				if(_x != "") then {
-					_object addMagazine _x;
-				};
-			} foreach _handgunweaponmagazine;
 
 			_object addweapon _handgunweapon;
 	
