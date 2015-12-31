@@ -536,8 +536,6 @@
 				};
 			} foreach _assigneditems;
 
-			_object addWeapon "ItemGPS";
-
 			if (needReload player == 1) then {reload player};
 			true;
 		};
