@@ -488,7 +488,7 @@
 				};
 			}foreach _vestitems;
 	
-			if(format["%1", _backpack] != "") then {
+			if!(_backpack isEqualTo "") then {
 				_object addbackpack _backpack;
 				{
 					if(!(_x isEqualTo "") and (_x isKindOf ["ItemCore", configFile >> "CfgWeapons"] )) then {
