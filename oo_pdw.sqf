@@ -536,7 +536,7 @@
 				};
 			} foreach _assigneditems;
 
-			if (needReload player == 1) then {reload player};
+			if (needReload _object == 1) then {reload _object};
 			true;
 		};
 
