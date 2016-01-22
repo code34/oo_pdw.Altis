@@ -531,8 +531,7 @@
 	
 			{
 				if(_x != "") then {
-					_object additem _x;
-					_object assignItem _x;
+					_object addweapon _x;
 				};
 			} foreach _assigneditems;
 
