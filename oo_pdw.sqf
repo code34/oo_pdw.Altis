@@ -220,6 +220,51 @@
 			MEMBER("write", _save);
 		};
 
+
+		PUBLIC FUNCTION("array","saveObjectsAroundPos") {
+			private ["_save", "_counter", "_position", "_distance"];
+
+			_position = _this select 0;
+			_distance = _this select 1;
+
+			_counter = -1;
+			{
+			 	if(_x distance _position < _distance) then {
+				 	if!((_x isKindOf "MAN") or (_x isKindOf "LOGIC")) then {
+						_counter = _counter + 1;
+						_save = [format ["objects_%1", _counter], _x];
+						MEMBER("saveObject", _save);
+					};
+				};
+				sleep 0.01;
+			}foreach (allMissionObjects "All");
+			_save = ["pdw_objects", _counter];
+			MEMBER("write", _save);
+		};
+
+		PUBLIC FUNCTION("STRING","saveObjectsInMarker") {
+			private ["_position", "_distancex", "_distancey"]	;
+
+			_position = getMarkerPos  _this;
+			_distancex = (getMarkerSize _this) select 0;
+			_distancey = (getMarkerSize _this) select 1;
+
+			_counter = -1;
+			{
+			 	if(((getpos _x) distance _position < _distancex) and ((getpos _x) distance _position < _distancey))  then {
+				 	if!((_x isKindOf "MAN") or (_x isKindOf "LOGIC")) then {
+						_counter = _counter + 1;
+						_save = [format ["objects_%1", _counter], _x];
+						MEMBER("saveObject", _save);
+					};
+				};
+				sleep 0.01;
+			}foreach (allMissionObjects "All");
+			_save = ["pdw_objects", _counter];
+			MEMBER("write", _save);
+		};
+
+
 		PUBLIC FUNCTION("","loadObjects") {
 			private ["_name", "_counter", "_object","_objects"];
 			
