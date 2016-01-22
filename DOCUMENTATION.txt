@@ -168,6 +168,16 @@
 
 	--------------------------------------------------------------------------------------------------------------
 
+	Function: ["saveObjectsExcludingObjects", _objects] call _pdw;
+	Save all objects informations : type, position, damage, excluding an array of objects
+	
+	Parameters:
+		_objects : array of objects excluded
+	
+	Return : True if success
+
+	--------------------------------------------------------------------------------------------------------------
+
 	Function: ["saveObjectsAroundPos", _position] call _pdw;
 	Save all objects informations : type, position, damage around a position
 	
@@ -178,11 +188,21 @@
 
 	--------------------------------------------------------------------------------------------------------------
 
-	Function: ["saveObjectsInMarker", _marker] call _pdw;
-	Save all objects informations : type, position, damage in a marker
+	Function: ["saveObjectsInMarkers", _markers] call _pdw;
+	Save all objects informations : type, position, damage in array of markers
 	
 	Parameters:
-		_marker : marker object
+		_markers : array of markers
+	
+	Return : True if success
+
+	--------------------------------------------------------------------------------------------------------------
+
+	Function: ["saveObjectsOutOfMarkers", _markers] call _pdw;
+	Save all objects informations : type, position, damage out of array of markers
+	
+	Parameters:
+		_markers : array of markers
 	
 	Return : True if success
 

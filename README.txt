@@ -37,7 +37,9 @@
 			- turn off gps add
 			- fix binocular not assigned
 			- Add saveObjectsAroundPos method
-			- Add saveObjectsInMarker method
+			- Add saveObjectsInMarkers method
+			- Add saveObjectsOutOfMarkers method
+			- Add saveObjectsExcludingObjects method
 		0.72	- fix return values of methods
 			- add savePlayers/loadPlayers methods
 			- add saveGroups/loadGroups methods
