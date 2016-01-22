@@ -221,7 +221,7 @@ class Mission
 		};
 		class Item1
 		{
-			position[]={11538.748,22.918827,11711.689};
+			position[]={11540.333,22.914827,11711.605};
 			id=14;
 			side="EMPTY";
 			vehicle="B_Heli_Light_01_F";
@@ -261,7 +261,7 @@ class Mission
 		};
 		class Item6
 		{
-			position[]={11548.187,22.870716,11724.044};
+			position[]={11557.282,22.84259,11721.208};
 			id=19;
 			side="EMPTY";
 			vehicle="Land_Pallet_MilBoxes_F";
@@ -307,6 +307,32 @@ class Mission
 			side="EMPTY";
 			vehicle="B_G_Offroad_01_repair_F";
 			skill=0.60000002;
+		};
+	};
+	class Markers
+	{
+		items=2;
+		class Item0
+		{
+			position[]={11550.641,22.830524,11736.662};
+			name="test";
+			text="test";
+			markerType="RECTANGLE";
+			type="Empty";
+			colorName="ColorRed";
+			a=5;
+			b=5;
+		};
+		class Item1
+		{
+			position[]={11540.793,22.910864,11712.632};
+			name="test_1";
+			text="test";
+			markerType="RECTANGLE";
+			type="Empty";
+			colorName="ColorRed";
+			a=5;
+			b=5;
 		};
 	};
 };
