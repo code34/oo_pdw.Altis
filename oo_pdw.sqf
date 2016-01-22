@@ -204,7 +204,12 @@
 				sleep 0.001;
 			}foreach allGroups;
 		};
-		
+
+		/*
+		Save all the object build in game excluding MAN & LOGIC 
+		Parameters: none
+		Return : true if sucess
+		*/
 		PUBLIC FUNCTION("","saveObjects") {
 			private ["_save", "_counter"];
 			_counter = -1;
@@ -220,7 +225,38 @@
 			MEMBER("write", _save);
 		};
 
+		/*
+		Save all the object build in game excluding MAN & LOGIC & array of object
+		Parameters: 
+			_this : array of object to exclude
+		Return : true if sucess
+		*/
+		PUBLIC FUNCTION("array","saveObjectsExcludingObjects") {
+			private ["_save", "_counter"];
+			
+			_counter = -1;
+			{
+				if!(_x in _this) then {
+				 	if!((_x isKindOf "MAN") or (_x isKindOf "LOGIC")) then {
+						_counter = _counter + 1;
+						_save = [format ["objects_%1", _counter], _x];
+						MEMBER("saveObject", _save);
+					};
+				};
+				sleep 0.01;
+			}foreach (allMissionObjects "All");
+			_save = ["pdw_objects", _counter];
+			MEMBER("write", _save);
+		};
 
+		/*
+		Save all objects informations : type, position, damage around a position
+		Parameters: 
+			_this : array
+			_this select 0 : _position - array
+			_this select 1:  _distance - scalar
+		Return : true if sucess
+		*/
 		PUBLIC FUNCTION("array","saveObjectsAroundPos") {
 			private ["_save", "_counter", "_position", "_distance"];
 
@@ -242,29 +278,81 @@
 			MEMBER("write", _save);
 		};
 
-		PUBLIC FUNCTION("STRING","saveObjectsInMarker") {
-			private ["_position", "_distancex", "_distancey"]	;
-
-			_position = getMarkerPos  _this;
-			_distancex = (getMarkerSize _this) select 0;
-			_distancey = (getMarkerSize _this) select 1;
-
+		/*
+		Save all objects informations (type, position, damage) in markers
+		Parameters: 
+			_this : array of strings (markers name)
+		Return : true if sucess
+		*/
+		PUBLIC FUNCTION("array","saveObjectsInMarkers") {
+			private ["_position", "_distancex", "_distancey", "_object", "_isincluded"];
+		
 			_counter = -1;
 			{
-			 	if(((getpos _x) distance _position < _distancex) and ((getpos _x) distance _position < _distancey))  then {
-				 	if!((_x isKindOf "MAN") or (_x isKindOf "LOGIC")) then {
+				_object = _x;
+				if!((_object isKindOf "MAN") or (_object isKindOf "LOGIC")) then {
+					_isincluded = false;
+					{
+						_position = getMarkerPos  _x;
+						_distancex = (getMarkerSize _x) select 0;
+						_distancey = (getMarkerSize _x) select 1;
+					 	if(((getpos _object) distance _position < _distancex) and ((getpos _object) distance _position < _distancey))  then { 	
+					 		_isincluded = true;
+						};
+						sleep 0.01;
+					}foreach _this;
+
+					if(_isincluded) then {
 						_counter = _counter + 1;
-						_save = [format ["objects_%1", _counter], _x];
+						_save = [format ["objects_%1", _counter], _object];
 						MEMBER("saveObject", _save);
 					};
 				};
-				sleep 0.01;
 			}foreach (allMissionObjects "All");
 			_save = ["pdw_objects", _counter];
 			MEMBER("write", _save);
 		};
 
+		/*
+		Save all objects informations (type, position, damage) out of markers
+		Parameters: 
+			_this : array of strings (markers name)
+		Return : true if sucess
+		*/
+		PUBLIC FUNCTION("array","saveObjectsOutOfMarkers") {
+			private ["_position", "_distancex", "_distancey", "_object", "_isexcluded"];
+		
+			_counter = -1;
+			{
+				_object = _x;
+				if!((_object isKindOf "MAN") or (_object isKindOf "LOGIC")) then {
+					_isexcluded = false;
+					{
+						_position = getMarkerPos  _x;
+						_distancex = (getMarkerSize _x) select 0;
+						_distancey = (getMarkerSize _x) select 1;
+					 	if(((getpos _object) distance _position < _distancex) and ((getpos _object) distance _position < _distancey))  then { 	
+					 		_isexcluded = true;
+						};
+						sleep 0.01;
+					}foreach _this;
 
+					if!(_isexcluded) then {
+						_counter = _counter + 1;
+						_save = [format ["objects_%1", _counter], _object];
+						MEMBER("saveObject", _save);
+					};
+				};
+			}foreach (allMissionObjects "All");
+			_save = ["pdw_objects", _counter];
+			MEMBER("write", _save);
+		};
+
+		/*
+		Restore all objects
+		Parameters:  none
+		Return : array of objects
+		*/
 		PUBLIC FUNCTION("","loadObjects") {
 			private ["_name", "_counter", "_object","_objects"];
 			
@@ -281,6 +369,13 @@
 			_objects;
 		};
 
+		/*
+		Save an object
+		Parameters:  
+			_this select 0 : _name : string
+			_this select 1 : _object : object
+		Return : true if sucess
+		*/
 		PUBLIC FUNCTION("array","saveObject") {
 			private ["_array", "_name", "_result", "_object"];
 			
