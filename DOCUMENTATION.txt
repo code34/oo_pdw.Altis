@@ -168,6 +168,26 @@
 
 	--------------------------------------------------------------------------------------------------------------
 
+	Function: ["saveObjectsAroundPos", _position] call _pdw;
+	Save all objects informations : type, position, damage around a position
+	
+	Parameters:
+		_position : position array
+	
+	Return : True if success
+
+	--------------------------------------------------------------------------------------------------------------
+
+	Function: ["saveObjectsInMarker", _marker] call _pdw;
+	Save all objects informations : type, position, damage in a marker
+	
+	Parameters:
+		_marker : marker object
+	
+	Return : True if success
+
+	--------------------------------------------------------------------------------------------------------------	
+
 	Function: _array = "loadObjects" call _pdw;
 	Load and return all objects loaded
 		
