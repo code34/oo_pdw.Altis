@@ -178,18 +178,19 @@
 
 	--------------------------------------------------------------------------------------------------------------
 
-	Function: ["saveObjectsAroundPos", _position] call _pdw;
-	Save all objects informations : type, position, damage around a position
+	Function: ["saveObjectsAroundPos", _array] call _pdw;
+	Save all objects informations (type, position, damage) around an array containing [_position, _maxdistance]
 	
 	Parameters:
+		_array : [[_position, _maxdistance], ..]
 		_position : position array
-	
+		_maxdistance: scalar
 	Return : True if success
 
 	--------------------------------------------------------------------------------------------------------------
 
 	Function: ["saveObjectsInMarkers", _markers] call _pdw;
-	Save all objects informations : type, position, damage in array of markers
+	Save all objects informations (type, position, damage) in array of markers
 	
 	Parameters:
 		_markers : array of markers
@@ -199,7 +200,7 @@
 	--------------------------------------------------------------------------------------------------------------
 
 	Function: ["saveObjectsOutOfMarkers", _markers] call _pdw;
-	Save all objects informations : type, position, damage out of array of markers
+	Save all objects informations (type, position, damage) out of array of markers
 	
 	Parameters:
 		_markers : array of markers

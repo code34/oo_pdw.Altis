@@ -250,29 +250,35 @@
 		};
 
 		/*
-		Save all objects informations : type, position, damage around a position
+		Save all objects informations (type, position, damage) around [_position, _maxdistance]
 		Parameters: 
-			_this : array
-			_this select 0 : _position - array
-			_this select 1:  _distance - scalar
+			_this : array [[_position, _maxdistance], ..]
+				_position : position array
+				_maxdistance: scalar
 		Return : true if sucess
 		*/
 		PUBLIC FUNCTION("array","saveObjectsAroundPos") {
-			private ["_save", "_counter", "_position", "_distance"];
-
-			_position = _this select 0;
-			_distance = _this select 1;
+			private ["_save", "_counter", "_position", "_maxdistance", "_isincluded"];
 
 			_counter = -1;
 			{
-			 	if(_x distance _position < _distance) then {
-				 	if!((_x isKindOf "MAN") or (_x isKindOf "LOGIC")) then {
-						_counter = _counter + 1;
-						_save = [format ["objects_%1", _counter], _x];
-						MEMBER("saveObject", _save);
+				_object = _x;
+				_isincluded = false;
+				{
+					_position = _x select 0;
+					_maxdistance = _x select 1;
+					if!((_object isKindOf "MAN") or (_object isKindOf "LOGIC")) then {
+					 	if(_object distance _position < _maxdistance) then {
+					 		_isincluded = true;
+						};
 					};
+					sleep 0.01;
+				}foreach _this;
+				if(_isincluded) then {
+					_counter = _counter + 1;
+					_save = [format ["objects_%1", _counter], _x];
+					MEMBER("saveObject", _save);
 				};
-				sleep 0.01;
 			}foreach (allMissionObjects "All");
 			_save = ["pdw_objects", _counter];
 			MEMBER("write", _save);
@@ -290,8 +296,8 @@
 			_counter = -1;
 			{
 				_object = _x;
+				_isincluded = false;
 				if!((_object isKindOf "MAN") or (_object isKindOf "LOGIC")) then {
-					_isincluded = false;
 					{
 						_position = getMarkerPos  _x;
 						_distancex = (getMarkerSize _x) select 0;
@@ -325,8 +331,8 @@
 			_counter = -1;
 			{
 				_object = _x;
+				_isexcluded = false;
 				if!((_object isKindOf "MAN") or (_object isKindOf "LOGIC")) then {
-					_isexcluded = false;
 					{
 						_position = getMarkerPos  _x;
 						_distancex = (getMarkerSize _x) select 0;
