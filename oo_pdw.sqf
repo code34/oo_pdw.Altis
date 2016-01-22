@@ -226,6 +226,30 @@
 		};
 
 		/*
+		Save all the object build in game excluding MAN & LOGIC & type of object
+		Parameters: 
+			_this : array of type to exclude
+		Return : true if sucess
+		*/
+		PUBLIC FUNCTION("array","saveObjectsExcludingTypes") {
+			private ["_save", "_counter"];
+			
+			_counter = -1;
+			{
+				if!(_x in _this) then {
+				 	if!((typeOf _x in _this) or (_x isKindOf "LOGIC")) then {
+						_counter = _counter + 1;
+						_save = [format ["objects_%1", _counter], _x];
+						MEMBER("saveObject", _save);
+					};
+				};
+				sleep 0.01;
+			}foreach (allMissionObjects "All");
+			_save = ["pdw_objects", _counter];
+			MEMBER("write", _save);
+		};		
+
+		/*
 		Save all the object build in game excluding MAN & LOGIC & array of object
 		Parameters: 
 			_this : array of object to exclude

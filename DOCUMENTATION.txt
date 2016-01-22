@@ -168,6 +168,16 @@
 
 	--------------------------------------------------------------------------------------------------------------
 
+	Function: ["saveObjectsExcludingTypes", _objects] call _pdw;
+	Save all objects informations (type, position, damage) excluding an array of objects type
+	
+	Parameters:
+		_objects : array of objects type excluded
+	
+	Return : True if success
+
+	--------------------------------------------------------------------------------------------------------------
+
 	Function: ["saveObjectsExcludingObjects", _objects] call _pdw;
 	Save all objects informations : type, position, damage, excluding an array of objects
 	

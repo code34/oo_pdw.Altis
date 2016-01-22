@@ -32,7 +32,6 @@
 
 	logs:
 		0.74	
-			
 			- fix magazines count for infantry
 			- turn off gps add
 			- fix binocular not assigned
@@ -40,6 +39,7 @@
 			- Add saveObjectsInMarkers method
 			- Add saveObjectsOutOfMarkers method
 			- Add saveObjectsExcludingObjects method
+			- Add saveObjectsExcludingTypes
 		0.72	- fix return values of methods
 			- add savePlayers/loadPlayers methods
 			- add saveGroups/loadGroups methods

@@ -22,7 +22,6 @@
 
 		hint "Save all objects";
 
-		_position = getMarkerPos "test";
 		"saveObjects" call _pdw;
 		sleep 2;
 
