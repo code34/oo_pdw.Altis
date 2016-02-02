@@ -21,8 +21,8 @@
 		sleep 2;
 
 		hint "Save all objects";
-
 		"saveObjects" call _pdw;
+	
 		sleep 2;
 
 		hint "Delete all objects";

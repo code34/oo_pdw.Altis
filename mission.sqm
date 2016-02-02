@@ -315,7 +315,7 @@ class Mission
 		class Item0
 		{
 			position[]={11550.641,22.830524,11736.662};
-			name="test";
+			name="test2";
 			text="test";
 			markerType="RECTANGLE";
 			type="Empty";
@@ -326,7 +326,7 @@ class Mission
 		class Item1
 		{
 			position[]={11540.793,22.910864,11712.632};
-			name="test_1";
+			name="test1";
 			text="test";
 			markerType="RECTANGLE";
 			type="Empty";
