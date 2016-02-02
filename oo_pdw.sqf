@@ -21,39 +21,46 @@
 	#include "oop.h"
 
 	CLASS("OO_PDW")
-		PRIVATE VARIABLE("string","driver");
-		PRIVATE VARIABLE("code","inidbi");
+		PRIVATE VARIABLE("string","drivername");
+		PRIVATE VARIABLE("code","driver");
+		PRIVATE VARIABLE("array","includingmarkers");
+		PRIVATE VARIABLE("array","excludingmarkers");
 
 		PUBLIC FUNCTION("string","constructor") { 
-			if!(tolower(_this) in ["inidbi", "profile"]) exitWith {
-				MEMBER("ToLog", "PDW: inidbi|profile driver undefined");
-			};
-		
-			if(_this == "inidbi") then {
+			private ["_array", "_drivername"];
+
+			_drivername = toLower (param [0, "profile", [""]]);
+
+			_array = [];
+
+			MEMBER("includingmarkers", _array);
+			MEMBER("excludingmarkers", _array);
+
+			if(_drivername == "inidbi") then {
 				if !(isClass(configFile >> "cfgPatches" >> "inidbi2")) exitwith { 
 					MEMBER("ToLog", "PDW: requires INIDBI2");
 				};
-				_inidbi = ["new", "oo_pdw"] call OO_INIDBI;
-				MEMBER("inidbi", _inidbi);
+				_driver = ["new", "oo_pdw"] call OO_INIDBI;
+				MEMBER("driver", _driver);
 			};
-			MEMBER("driver", _this);
+			MEMBER("drivername", _drivername);
 		};
 
 		PUBLIC FUNCTION("string","setDbName") {
-			["setDbName", _this] call MEMBER("inidbi", nil);
+			["setDbName", _this] call MEMBER("driver", nil);
 		};
 
 		PRIVATE FUNCTION("array","read") {
-			private ["_driver", "_key", "_result", "_default"];
+			private ["_drivername", "_key", "_result", "_default"];
 			
 			_key = _this select 0;
 			_default = _this select 1;
 
-			_driver = MEMBER("driver", nil);
+			_drivername = MEMBER("drivername", nil);
 
-			switch (_driver) do {
+			switch (_drivername) do {
 				case "inidbi": {
-					_result = ["read", ["pdw", _key, _default]] call MEMBER("inidbi", nil);
+					_result = ["read", ["pdw", _key, _default]] call MEMBER("driver", nil);
 				};
 
 				case "profile": {
@@ -68,18 +75,18 @@
 		};
 
 		PRIVATE FUNCTION("array","write") {
-			private ["_driver", "_key", "_array", "_result"];
+			private ["_drivername", "_key", "_array", "_result"];
 			
 			_key = _this select 0;
 			_array = _this select 1;
 
-			_driver = MEMBER("driver", nil);
+			_drivername = MEMBER("drivername", nil);
 
-			_result = ["write", ["pdw", _key, _array]] call MEMBER("inidbi", nil);
+			_result = ["write", ["pdw", _key, _array]] call MEMBER("driver", nil);
 
-			switch (_driver) do {
+			switch (_drivername) do {
 				case "inidbi": {
-					_result = ["write", ["pdw", _key, _array]] call MEMBER("inidbi", nil);
+					_result = ["write", ["pdw", _key, _array]] call MEMBER("driver", nil);
 				};
 
 				case "profile": {
@@ -714,7 +721,7 @@
 		};
 
 		PUBLIC FUNCTION("","deconstructor") { 
+			DELETE_VARIABLE("drivername");
 			DELETE_VARIABLE("driver");
-			DELETE_VARIABLE("inidbi");
 		};
 	ENDCLASS;
