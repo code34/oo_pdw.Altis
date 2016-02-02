@@ -25,6 +25,10 @@
 		PRIVATE VARIABLE("code","inidbi");
 
 		PUBLIC FUNCTION("string","constructor") { 
+			if!(tolower(_this) in ["inidbi", "profile"]) exitWith {
+				MEMBER("ToLog", "PDW: inidbi|profile driver undefined");
+			};
+		
 			if(_this == "inidbi") then {
 				if !(isClass(configFile >> "cfgPatches" >> "inidbi2")) exitwith { 
 					MEMBER("ToLog", "PDW: requires INIDBI2");
