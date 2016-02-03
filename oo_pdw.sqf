@@ -25,6 +25,10 @@
 		PRIVATE VARIABLE("code","driver");
 		PRIVATE VARIABLE("array","includingmarkers");
 		PRIVATE VARIABLE("array","excludingmarkers");
+		PRIVATE VARIABLE("array","aroundpos");
+		PRIVATE VARIABLE("array","excludingtypes");
+		PRIVATE VARIABLE("array","excludingobjects");
+		PRIVATE VARIABLE("array","includingobjects");
 
 		PUBLIC FUNCTION("string","constructor") { 
 			private ["_array", "_drivername"];
@@ -35,6 +39,10 @@
 
 			MEMBER("includingmarkers", _array);
 			MEMBER("excludingmarkers", _array);
+			MEMBER("aroundpos", _array);
+			MEMBER("excludingtypes", _array);
+			MEMBER("excludingobjects", _array);
+			MEMBER("includingobjects", _array);
 
 			if(_drivername == "inidbi") then {
 				if !(isClass(configFile >> "cfgPatches" >> "inidbi2")) exitwith { 
@@ -48,6 +56,30 @@
 
 		PUBLIC FUNCTION("string","setDbName") {
 			["setDbName", _this] call MEMBER("driver", nil);
+		};
+
+		PUBLIC FUNCTION("array","setIncludingMarkers") {
+			MEMBER("includingmarkers", _this);
+		};
+
+		PUBLIC FUNCTION("array","setExcludingMarkers") {
+			MEMBER("excludingmarkers", _this);
+		};
+
+		PUBLIC FUNCTION("array","setAroundPos") {
+			MEMBER("aroundpos", _this);
+		};
+
+		PUBLIC FUNCTION("array","setExcludingTypes") {
+			MEMBER("excludingtypes", _this);
+		};
+
+		PUBLIC FUNCTION("array","setExcludingObjects") {
+			MEMBER("excludingobjects", _this);
+		};
+
+		PUBLIC FUNCTION("array","setIncludingObjects") {
+			MEMBER("includingobjects", _this);
 		};
 
 		PRIVATE FUNCTION("array","read") {
@@ -222,172 +254,78 @@
 		Return : true if sucess
 		*/
 		PUBLIC FUNCTION("","saveObjects") {
-			private ["_save", "_counter"];
-			_counter = -1;
-			{
-			 	if!((_x isKindOf "MAN") or (_x isKindOf "LOGIC")) then {
-					_counter = _counter + 1;
-					_save = [format ["objects_%1", _counter], _x];
-					MEMBER("saveObject", _save);
-				};
-				sleep 0.01;
-			}foreach (allMissionObjects "All");
-			_save = ["pdw_objects", _counter];
-			MEMBER("write", _save);
-		};
-
-		/*
-		Save all the object build in game excluding MAN & LOGIC & type of object
-		Parameters: 
-			_this : array of type to exclude
-		Return : true if sucess
-		*/
-		PUBLIC FUNCTION("array","saveObjectsExcludingTypes") {
-			private ["_save", "_counter"];
+			private ["_excludingtypes", "_excludingobjects", "_excludingmarkers", "_includingmarkers", "_objects", "_aroundpos", "_object", "_save", "_hypo", "_include", "_position", "_includingobjects", "_temp"];
 			
-			_counter = -1;
-			{
-				if!(_x in _this) then {
-				 	if!((typeOf _x in _this) or (_x isKindOf "LOGIC")) then {
-						_counter = _counter + 1;
-						_save = [format ["objects_%1", _counter], _x];
-						MEMBER("saveObject", _save);
-					};
-				};
-				sleep 0.01;
-			}foreach (allMissionObjects "All");
-			_save = ["pdw_objects", _counter];
-			MEMBER("write", _save);
-		};		
-
-		/*
-		Save all the object build in game excluding MAN & LOGIC & array of object
-		Parameters: 
-			_this : array of object to exclude
-		Return : true if sucess
-		*/
-		PUBLIC FUNCTION("array","saveObjectsExcludingObjects") {
-			private ["_save", "_counter"];
+			_excludingtypes = MEMBER("excludingtypes", nil);
+			_excludingobjects = MEMBER("excludingobjects", nil);
+			_includingobjects = MEMBER("includingobjects", nil);
+			_excludingmarkers = MEMBER("excludingmarkers", nil);
+			_includingmarkers = MEMBER("includingmarkers", nil);
+			_aroundpos = MEMBER("aroundpos", nil);
 			
-			_counter = -1;
-			{
-				if!(_x in _this) then {
-				 	if!((_x isKindOf "MAN") or (_x isKindOf "LOGIC")) then {
-						_counter = _counter + 1;
-						_save = [format ["objects_%1", _counter], _x];
-						MEMBER("saveObject", _save);
-					};
-				};
-				sleep 0.01;
-			}foreach (allMissionObjects "All");
-			_save = ["pdw_objects", _counter];
-			MEMBER("write", _save);
-		};
-
-		/*
-		Save all objects informations (type, position, damage) around [_position, _maxdistance]
-		Parameters: 
-			_this : array [[_position, _maxdistance], ..]
-				_position : position array
-				_maxdistance: scalar
-		Return : true if sucess
-		*/
-		PUBLIC FUNCTION("array","saveObjectsAroundPos") {
-			private ["_save", "_counter", "_position", "_maxdistance", "_isincluded"];
-
-			_counter = -1;
-			{
+			_objects = allMissionObjects "All";
+			{	
 				_object = _x;
-				_isincluded = false;
+				if(((typeOf _object) in _excludingtypes) and !(_object in _excludingobjects)) then { _excludingobjects = _excludingobjects + [_object];};
+				if(((_object isKindOf "MAN") or (_object isKindOf "LOGIC"))  and !(_object in _excludingobjects)) then { _excludingobjects = _excludingobjects + [_object];};
+				if((isnil "_object") and !(_object in _excludingobjects)) then { _excludingobjects = _excludingobjects + [_object];};
+
+				{
+					_position = getMarkerPos  _x;
+					_distancex = (getMarkerSize _x) select 0;
+					_distancey = (getMarkerSize _x) select 1;
+					_hypo =  sqrt ((_distancex ^ 2) + (_distancey ^ 2));
+					if((_object distance _position < _hypo) and !(_object in _excludingobjects)) then { _excludingobjects = _excludingobjects + [_object];};
+					sleep 0.0001;
+				}foreach _excludingmarkers;
+				//hint format ["include hypo:%1 distance: %2 objet: %3 marker: %4", _hypo, ((getpos _object) distance _position), position _object, _position];
+
+				//_include = true;
+				{
+					_position = getMarkerPos  _x;
+					_distancex = (getMarkerSize _x) select 0;
+					_distancey = (getMarkerSize _x) select 1;
+					_hypo =  sqrt ((_distancex ^ 2) + (_distancey ^ 2));
+					//if(_object distance _position > _hypo)  then { _include = false;};
+					if((_object distance _position < _hypo) and !(_object in _includingobjects))  then { _includingobjects = _includingobjects + [_object];};
+					sleep 0.0001;
+				}foreach _includingmarkers;
+				//if!(_include) then {_objects = _objects - [_object];};
+				//hintc format ["include %1 %2 %3 %4 %5 %6", _include, _includingmarkers, _hypo, ((getpos _object) distance _position), position _object, _position];
+
+				//_include = true;
 				{
 					_position = _x select 0;
 					_maxdistance = _x select 1;
-					if!((_object isKindOf "MAN") or (_object isKindOf "LOGIC")) then {
-					 	if(_object distance _position < _maxdistance) then {
-					 		_isincluded = true;
-						};
-					};
-					sleep 0.01;
-				}foreach _this;
-				if(_isincluded) then {
-					_counter = _counter + 1;
-					_save = [format ["objects_%1", _counter], _x];
-					MEMBER("saveObject", _save);
-				};
-			}foreach (allMissionObjects "All");
-			_save = ["pdw_objects", _counter];
-			MEMBER("write", _save);
-		};
+				 	//if(_object distance _position > _maxdistance) then { _include = false; };
+				 	if((_object distance _position < _maxdistance) and !(_object in _includingobjects)) then { _includingobjects = _includingobjects + [_object];};
+					sleep 0.0001;
+				}foreach _aroundpos;
+				//if!(_include) then {_objects = _objects - [_object];};
+			}foreach _objects;
 
-		/*
-		Save all objects informations (type, position, damage) in markers
-		Parameters: 
-			_this : array of strings (markers name)
-		Return : true if sucess
-		*/
-		PUBLIC FUNCTION("array","saveObjectsInMarkers") {
-			private ["_position", "_distancex", "_distancey", "_object", "_isincluded"];
-		
-			_counter = -1;
+			if(count _includingobjects > 0) then {
+				_objects = _includingobjects - _excludingobjects;
+			} else {
+				_objects = _objects - _excludingobjects;
+			};
+
+			_temp = [];
 			{
-				_object = _x;
-				_isincluded = false;
-				if!((_object isKindOf "MAN") or (_object isKindOf "LOGIC")) then {
-					{
-						_position = getMarkerPos  _x;
-						_distancex = (getMarkerSize _x) select 0;
-						_distancey = (getMarkerSize _x) select 1;
-					 	if(((getpos _object) distance _position < _distancex) and ((getpos _object) distance _position < _distancey))  then { 	
-					 		_isincluded = true;
-						};
-						sleep 0.01;
-					}foreach _this;
+				_temp = _temp + [typeOf _x];
+			}foreach _objects;
+			hint format ["%1", _temp];
 
-					if(_isincluded) then {
-						_counter = _counter + 1;
-						_save = [format ["objects_%1", _counter], _object];
-						MEMBER("saveObject", _save);
-					};
-				};
-			}foreach (allMissionObjects "All");
-			_save = ["pdw_objects", _counter];
-			MEMBER("write", _save);
-		};
-
-		/*
-		Save all objects informations (type, position, damage) out of markers
-		Parameters: 
-			_this : array of strings (markers name)
-		Return : true if sucess
-		*/
-		PUBLIC FUNCTION("array","saveObjectsOutOfMarkers") {
-			private ["_position", "_distancex", "_distancey", "_object", "_isexcluded"];
-		
-			_counter = -1;
 			{
-				_object = _x;
-				_isexcluded = false;
-				if!((_object isKindOf "MAN") or (_object isKindOf "LOGIC")) then {
-					{
-						_position = getMarkerPos  _x;
-						_distancex = (getMarkerSize _x) select 0;
-						_distancey = (getMarkerSize _x) select 1;
-					 	if(((getpos _object) distance _position < _distancex) and ((getpos _object) distance _position < _distancey))  then { 	
-					 		_isexcluded = true;
-						};
-						sleep 0.01;
-					}foreach _this;
+				_save = [format ["objects_%1", _forEachIndex], _x];
+				MEMBER("saveObject", _save);
+				sleep 0.0001;
+			}foreach _objects;
 
-					if!(_isexcluded) then {
-						_counter = _counter + 1;
-						_save = [format ["objects_%1", _counter], _object];
-						MEMBER("saveObject", _save);
-					};
-				};
-			}foreach (allMissionObjects "All");
-			_save = ["pdw_objects", _counter];
+			_save = ["pdw_objects", (count _objects) - 1];
 			MEMBER("write", _save);
 		};
+
 
 		/*
 		Restore all objects
@@ -723,5 +661,11 @@
 		PUBLIC FUNCTION("","deconstructor") { 
 			DELETE_VARIABLE("drivername");
 			DELETE_VARIABLE("driver");
+			DELETE_VARIABLE("includingmarkers");
+			DELETE_VARIABLE("excludingmarkers");
+			DELETE_VARIABLE("aroundpos");
+			DELETE_VARIABLE("excludingtypes");
+			DELETE_VARIABLE("excludingobjects");
+			DELETE_VARIABLE("includingobjects");
 		};
 	ENDCLASS;
