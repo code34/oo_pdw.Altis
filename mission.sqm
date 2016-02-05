@@ -226,6 +226,7 @@ class Mission
 			side="EMPTY";
 			vehicle="B_Heli_Light_01_F";
 			skill=0.60000002;
+			text="chopper";
 		};
 		class Item2
 		{
@@ -314,9 +315,9 @@ class Mission
 		items=2;
 		class Item0
 		{
-			position[]={11550.641,22.830524,11736.662};
+			position[]={11550.676,22.828516,11737.102};
 			name="test2";
-			text="test";
+			text="test2";
 			markerType="RECTANGLE";
 			type="Empty";
 			colorName="ColorRed";
@@ -325,9 +326,9 @@ class Mission
 		};
 		class Item1
 		{
-			position[]={11540.793,22.910864,11712.632};
+			position[]={11540.262,22.912521,11712.541};
 			name="test1";
-			text="test";
+			text="test1";
 			markerType="RECTANGLE";
 			type="Empty";
 			colorName="ColorRed";
