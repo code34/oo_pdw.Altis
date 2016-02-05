@@ -31,6 +31,19 @@
 	You can share, modify, distribute this script but don't remove the licence and the name of the original author
 
 	logs:
+		0.76
+			- Add setIncludingMarkers method
+			- Add setExcludingMarkers method
+			- Add setAroundPos method
+			- Add setExcludingTypes method
+			- Add setExcludingObjects method
+			- Add setIncludingObjects method
+			- Delete saveObjectsAroundPos method
+			- Delete saveObjectsInMarkers method
+			- Delete saveObjectsOutOfMarkers method
+			- Delete saveObjectsExcludingObjects method
+			- Delete saveObjectsExcludingTypes
+
 		0.74	
 			- fix magazines count for infantry
 			- turn off gps add
