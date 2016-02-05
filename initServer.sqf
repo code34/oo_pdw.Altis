@@ -21,8 +21,13 @@
 		sleep 2;
 
 		hint "Save all objects";
+		//Filters example
+		//_aroundpos = [[position player, 100], [position chopper, 10]];
+		//["setAroundPos", _aroundpos] call _pdw;
+		//["setExcludingTypes", ["B_Heli_Light_01_F"]] call _pdw;
+		//["setExcludingMarkers", ["test1", "test2"]] call _pdw;
 		"saveObjects" call _pdw;
-	
+
 		sleep 2;
 
 		hint "Delete all objects";
