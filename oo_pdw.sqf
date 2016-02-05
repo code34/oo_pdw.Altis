@@ -85,8 +85,10 @@
 		PRIVATE FUNCTION("array","read") {
 			private ["_drivername", "_key", "_result", "_default"];
 			
-			_key = _this select 0;
-			_default = _this select 1;
+			_key = param [0, "", [""]];
+			_default = param[1, ""];
+
+			if(_key isEqualTo "") exitwith { MEMBER("ToLog", "PDW: write failed - label not defined"); false;};
 
 			_drivername = MEMBER("drivername", nil);
 
@@ -109,8 +111,10 @@
 		PRIVATE FUNCTION("array","write") {
 			private ["_drivername", "_key", "_array", "_result"];
 			
-			_key = _this select 0;
-			_array = _this select 1;
+			_key = param [0, "", [""]];
+			_array = param [1, ""];
+
+			if(_key isEqualTo "") exitwith { MEMBER("ToLog", "PDW: write failed - label not defined"); false;};
 
 			_drivername = MEMBER("drivername", nil);
 
@@ -343,21 +347,21 @@
 		/*
 		Save an object
 		Parameters:  
-			_this select 0 : _name : label of the save
-			_this select 1 : _object : object
+			_this select 0 : _label : label of the save
+			_this select 1 : _object : object to save
 		Return : true if sucess
 		*/
 		PUBLIC FUNCTION("array","saveObject") {
-			private ["_array", "_name", "_result", "_object"];
+			private ["_array", "_label", "_object"];
 			
-			_name = _this select 0;
-			_object = _this select 1;
+			_label = param [0, "", [""]];
+			_object = param [1, ""];
 			
-			if (isnil "_name") exitwith { 
-				MEMBER("ToLog", "PDW: require a object name to saveObject");
-			};
+			if (_label isEqualTo "") exitwith { MEMBER("ToLog", "PDW: require an object label to saveObject"); };
+			if (_object isEqualTo "") exitwith { MEMBER("ToLog", "PDW: require an object to saveObject"); };
 
-			_name = "pdw_object_" + _name;
+
+			_label = "pdw_object_" + _label;
 
 			_array = [
 				(typeof _object),
@@ -370,7 +374,7 @@
 				(getBackpackCargo _object)
 				];
 			
-			_save = [_name, _array];
+			_save = [_label, _array];
 			MEMBER("write", _save);
 		};
 
@@ -467,36 +471,34 @@
 		};
 
 		PUBLIC FUNCTION("array","saveUnit") {
-			private ["_name", "_object", "_result", "_array"];
+			private ["_label", "_object", "_result", "_array"];
 
-			_name = _this select 0;
-			_object = _this select 1;
-			
-			if (isnil "_name") exitwith { 
-				MEMBER("ToLog", "PDW: require a unit name to saveUnit");
-			};
+			_label = param [0, "", [""]];
+			_object = param [1, ""];
 
-			_name = "pdw_unit_" + _name;
+			if (_label isEqualTo "") exitwith { MEMBER("ToLog", "PDW: require a unit label to saveUnit");};
+			if (_object isEqualTo "") exitwith { MEMBER("ToLog", "PDW: require a unit to saveUnit");};
+
+			_label = "pdw_unit_" + _label;
 
 			_array = [(typeof _object), (getpos _object), (getdir _object), (getdammage _object)];
 			
-			_save = [_name, _array];
+			_save = [_label, _array];
 			MEMBER("write", _save);
 		};
 
 		PUBLIC FUNCTION("array","loadUnit") {
-			private ["_name", "_array", "_position", "_damage", "_dir", "_typeof", "_unit", "_group"];
+			private ["_label", "_array", "_position", "_damage", "_dir", "_typeof", "_unit", "_group"];
 
-			_name = _this select 0;
-			_group = _this select 1;
+			_label = param [0, "", [""]];
+			_group = param [1, ""];
 
-			if (isnil "_name") exitwith { 
-				MEMBER("ToLog", "PDW: require a unit name to loadUnit");
-			};
+			if (_label isEqualTo "") exitwith { MEMBER("ToLog", "PDW: require a unit label to loadUnit");};
+			if (_group isEqualTo "") exitwith { MEMBER("ToLog", "PDW: require a unit group to loadUnit");};				
 
-			_name = "pdw_unit_" + _name;			
+			_label = "pdw_unit_" + _label;
 
-			_save = [_name, []];
+			_save = [_label, []];
 			_array = MEMBER("read", _save);
 			if(_array isequalto []) exitwith {false};	
 
@@ -513,16 +515,15 @@
 		};
 
 		PUBLIC FUNCTION("array","saveInventory") {
-			private ["_name", "_object", "_result", "_array"];
+			private ["_label", "_object", "_result", "_array"];
 
-			_name = _this select 0;
-			_object = _this select 1;
+			_label = param [0, "", [""]];
+			_object = param [1, ""];
 			
-			if (isnil "_name") exitwith { 
-				MEMBER("ToLog", "PDW: require a unit name to saveUnit");
-			};
+			if (_label isEqualTo "") exitwith { MEMBER("ToLog", "PDW: require an unit label to saveUnit");};
+			if (_object isEqualTo "") exitwith { MEMBER("ToLog", "PDW: require an unit ojbect to saveUnit");};				
 
-			_name = "pdw_inventory_" + _name;			
+			_label = "pdw_inventory_" + _label;			
 
 			_array = [
 				(headgear _object), 
@@ -543,23 +544,22 @@
 				(assignedItems _object)
 			];
 
-			_save = [_name, _array];
+			_save = [_label, _array];
 			MEMBER("write", _save);
 		};
 
 		PUBLIC FUNCTION("array","loadInventory") {
-			private ["_name", "_array", "_headgear", "_goggles", "_uniform", "_uniformitems", "_vest", "_vestitems", "_backpack", "_backpackitems", "_primaryweapon", "_primaryweaponitems", "_fullmagazine", "_secondaryweapon", "_secondaryweaponitems", "_handgun", "_handgunweaponitems", "_assigneditems", "_position", "_damage", "_dir", "_object"];
+			private ["_label", "_array", "_headgear", "_goggles", "_uniform", "_uniformitems", "_vest", "_vestitems", "_backpack", "_backpackitems", "_primaryweapon", "_primaryweaponitems", "_fullmagazine", "_secondaryweapon", "_secondaryweaponitems", "_handgun", "_handgunweaponitems", "_assigneditems", "_position", "_damage", "_dir", "_object"];
 
-			_name = _this select 0;
-			_object = _this select 1;
+			_label = param [0, "", [""]];
+			_object = param [1, ""];
+			
+			if (_label isEqualTo "") exitwith { MEMBER("ToLog", "PDW: require a unit label to loadInventory");};
+			if (_object isEqualTo "") exitwith { MEMBER("ToLog", "PDW: require a unit object to loadInventory");};
 
-			if (isnil "_name") exitwith { 
-				MEMBER("ToLog", "PDW: require a unit name to loadInventory");
-			};
+			_label = "pdw_inventory_" + _label;			
 
-			_name = "pdw_inventory_" + _name;			
-
-			_save = [_name, []];
+			_save = [_label, []];
 			_array = MEMBER("read", _save);
 			if(_array isequalto []) exitwith {false};
 
