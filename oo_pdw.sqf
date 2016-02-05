@@ -254,7 +254,7 @@
 		Return : true if sucess
 		*/
 		PUBLIC FUNCTION("","saveObjects") {
-			private ["_excludingtypes", "_excludingobjects", "_excludingmarkers", "_includingmarkers", "_objects", "_aroundpos", "_object", "_save", "_hypo", "_include", "_position", "_includingobjects", "_temp"];
+			private ["_excludingtypes", "_excludingobjects", "_excludingmarkers", "_includingmarkers", "_objects", "_aroundpos", "_object", "_save", "_hypo", "_position", "_includingobjects", "_include", "_exclude"];
 			
 			_excludingtypes = MEMBER("excludingtypes", nil);
 			_excludingobjects = MEMBER("excludingobjects", nil);
@@ -266,42 +266,40 @@
 			_objects = allMissionObjects "All";
 			{	
 				_object = _x;
-				if(((typeOf _object) in _excludingtypes) and !(_object in _excludingobjects)) then { _excludingobjects = _excludingobjects + [_object];};
-				if(((_object isKindOf "MAN") or (_object isKindOf "LOGIC"))  and !(_object in _excludingobjects)) then { _excludingobjects = _excludingobjects + [_object];};
-				if((isnil "_object") and !(_object in _excludingobjects)) then { _excludingobjects = _excludingobjects + [_object];};
+				_exclude = false;
+				_include = false;
+
+				if((typeOf _object) in _excludingtypes) then {_exclude = true;};
+				if((_object isKindOf "MAN") or (_object isKindOf "LOGIC"))  then { _exclude = true;};
+				if(isnil "_object") then { _exclude = true;};
 
 				{
 					_position = getMarkerPos  _x;
 					_distancex = (getMarkerSize _x) select 0;
 					_distancey = (getMarkerSize _x) select 1;
 					_hypo =  sqrt ((_distancex ^ 2) + (_distancey ^ 2));
-					if((_object distance _position < _hypo) and !(_object in _excludingobjects)) then { _excludingobjects = _excludingobjects + [_object];};
+					if(_object distance _position < _hypo) then { _exclude = true;};
 					sleep 0.0001;
 				}foreach _excludingmarkers;
-				//hint format ["include hypo:%1 distance: %2 objet: %3 marker: %4", _hypo, ((getpos _object) distance _position), position _object, _position];
 
-				//_include = true;
 				{
 					_position = getMarkerPos  _x;
 					_distancex = (getMarkerSize _x) select 0;
 					_distancey = (getMarkerSize _x) select 1;
 					_hypo =  sqrt ((_distancex ^ 2) + (_distancey ^ 2));
-					//if(_object distance _position > _hypo)  then { _include = false;};
-					if((_object distance _position < _hypo) and !(_object in _includingobjects))  then { _includingobjects = _includingobjects + [_object];};
+					if(_object distance _position < _hypo) then { _include = true;};
 					sleep 0.0001;
 				}foreach _includingmarkers;
-				//if!(_include) then {_objects = _objects - [_object];};
-				//hintc format ["include %1 %2 %3 %4 %5 %6", _include, _includingmarkers, _hypo, ((getpos _object) distance _position), position _object, _position];
 
-				//_include = true;
 				{
 					_position = _x select 0;
 					_maxdistance = _x select 1;
-				 	//if(_object distance _position > _maxdistance) then { _include = false; };
-				 	if((_object distance _position < _maxdistance) and !(_object in _includingobjects)) then { _includingobjects = _includingobjects + [_object];};
+				 	if(_object distance _position < _maxdistance) then { _include = true;};
 					sleep 0.0001;
 				}foreach _aroundpos;
-				//if!(_include) then {_objects = _objects - [_object];};
+
+				if(_include) then { _includingobjects = _includingobjects + [_object];};
+				if(_exclude) then {_excludingobjects = _excludingobjects + [_object];};
 			}foreach _objects;
 
 			if(count _includingobjects > 0) then {
@@ -309,12 +307,6 @@
 			} else {
 				_objects = _objects - _excludingobjects;
 			};
-
-			_temp = [];
-			{
-				_temp = _temp + [typeOf _x];
-			}foreach _objects;
-			hint format ["%1", _temp];
 
 			{
 				_save = [format ["objects_%1", _forEachIndex], _x];
@@ -351,7 +343,7 @@
 		/*
 		Save an object
 		Parameters:  
-			_this select 0 : _name : string
+			_this select 0 : _name : label of the save
 			_this select 1 : _object : object
 		Return : true if sucess
 		*/
