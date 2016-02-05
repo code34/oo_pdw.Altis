@@ -65,33 +65,33 @@
 	Return : True if success
 	--------------------------------------------------------------------------------------------------------------
 	
-	Function: _unit = ["loadUnit", [name, group]] call _pdw;
+	Function: _unit = ["loadUnit", [_label, _group]] call _pdw;
 	Load unit : type, position, damage, dir
 		
 	Parameters:
-		name - string name of unit
-		group - group object where the unit have to be restore
+		_label - string label for the unit
+		_group - group object where the unit have to be restore
 		
 	Return : unit otherwise false;
 
 	--------------------------------------------------------------------------------------------------------------
 
-	Function: _bool = ["loadInventory", [_name, _unit]] call _pdw;
+	Function: _bool = ["loadInventory", [_label, _unit]] call _pdw;
 	Load a preset of equipment (all stuffs in backpacks, weapons, etc)
 		
 	Parameters:
-		_name : string name of the preset
+		_label : string label for the preset
 		_unit : unit object which will load the preset inventory
 
 	Return : True if success
 
 	--------------------------------------------------------------------------------------------------------------
 
-	Function: _bool = ["saveInventory", [_name, _unit]] call _pdw;
+	Function: _bool = ["saveInventory", [_label, _unit]] call _pdw;
 	Save in a preset all the equipment of the unit (all stuffs in backpacks, weapons, etc)
 		
 	Parameters:
-		_name : string name of the preset
+		_label : string label for the preset
 		_unit :  unit object which will be used to save the preset inventory
 
 	Return : True if success
@@ -159,65 +159,77 @@
 	--------------------------------------------------------------------------------------------------------------
 
 	Function: "saveObjects" call _pdw;
-	Save all objects informations : type, position, damage
 	
-	Parameters:
-		none
-	
-	Return : True if success
+	Save all objects informations : type, position, damage according the filters
+	If no filters, all objects are saved (except soldiers & logics)
 
-	--------------------------------------------------------------------------------------------------------------
+	filter methods (describe above):
+		setIncludingMarkers
+		setExcludingMarkers
+		setAroundPos
+		setExcludingTypes
+		setExcludingObjects
+		setIncludingObjects
 
-	Function: ["saveObjectsExcludingTypes", _objects] call _pdw;
-	Save all objects informations (type, position, damage) excluding an array of objects type
-	
-	Parameters:
-		_objects : array of objects type excluded
-	
-	Return : True if success
-
-	--------------------------------------------------------------------------------------------------------------
-
-	Function: ["saveObjectsExcludingObjects", _objects] call _pdw;
-	Save all objects informations : type, position, damage, excluding an array of objects
-	
-	Parameters:
-		_objects : array of objects excluded
+	Parameters:  none
 	
 	Return : True if success
 
 	--------------------------------------------------------------------------------------------------------------
 
-	Function: ["saveObjectsAroundPos", _array] call _pdw;
-	Save all objects informations (type, position, damage) around an array containing [_position, _maxdistance]
+	Function: ["setIncludingMarkers",  _array] call _pdw;
+	Set array of markers containing objects to save
 	
-	Parameters:
-		_array : [[_position, _maxdistance], ..]
-		_position : position array
-		_maxdistance: scalar
-	Return : True if success
+	Parameters: _array : array containing objects
+
+	Return : none
 
 	--------------------------------------------------------------------------------------------------------------
 
-	Function: ["saveObjectsInMarkers", _markers] call _pdw;
-	Save all objects informations (type, position, damage) in array of markers
+	Function: ["setExcludingMarkers",  _array] call _pdw;
+	Set array of markers where objects don't have to be save
 	
-	Parameters:
-		_markers : array of markers
-	
-	Return : True if success
+	Parameters: _array : array containing objects
+
+	Return : none
 
 	--------------------------------------------------------------------------------------------------------------
 
-	Function: ["saveObjectsOutOfMarkers", _markers] call _pdw;
-	Save all objects informations (type, position, damage) out of array of markers
+	Function: ["setAroundPos",  _array] call _pdw;
+	Set array of positions of x distance perimeter, where objects have to be save
 	
-	Parameters:
-		_markers : array of markers
-	
-	Return : True if success
+	Parameters: _array : array containing [[position, distance], [position, distance], ..]
 
-	--------------------------------------------------------------------------------------------------------------	
+	Return : none
+
+	--------------------------------------------------------------------------------------------------------------
+
+	Function: ["setExcludingTypes",  _array] call _pdw;
+	Set array of of objects type, dont have to be save. 
+	
+	Parameters: _array : array containing types of object ["B_Heli_Light_01_F"]
+
+	Return : none
+
+	--------------------------------------------------------------------------------------------------------------
+
+	Function: ["setExcludingObjects",  _array] call _pdw;
+	Set array of of objects, dont have to be save. 
+	
+	Parameters: _array : array containing object 
+
+	Return : none
+
+	--------------------------------------------------------------------------------------------------------------
+
+	Function: ["setIncludingObjects",  _array] call _pdw;
+	Set array of of objects  that have to be save
+	
+	Parameters: _array : array containing object 
+
+	Return : none
+
+	------------------------------------------------------------------------------------------------------------	
 
 	Function: _array = "loadObjects" call _pdw;
 	Load and return all objects loaded
@@ -229,22 +241,22 @@
 		
 	--------------------------------------------------------------------------------------------------------------
 
-	Function: _bool = ["saveObject", [_name, _object]] call _pdw;
+	Function: _bool = ["saveObject", [_label, _object]] call _pdw;
 	Save object, and all its cargo
 		
 	Parameters:
-		_name : string name of the object to save
+		_label : string label of the object to save
 		_object :  object
 
 	Return : True if success
 
 	--------------------------------------------------------------------------------------------------------------
 
-	Function: _object = ["loadObject", _name] call _pdw;
+	Function: _object = ["loadObject", _label] call _pdw;
 	Load object and return object loaded
 		
 	Parameters:
-		_name : string name of the object to load
+		_label : string label of the object to load
 	
 	Return : object
 
