@@ -43,6 +43,7 @@
 			- Delete saveObjectsOutOfMarkers method
 			- Delete saveObjectsExcludingObjects method
 			- Delete saveObjectsExcludingTypes
+			- Control type methods parameters
 
 		0.74	
 			- fix magazines count for infantry
