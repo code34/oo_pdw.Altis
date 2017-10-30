@@ -1,6 +1,6 @@
 
 	Author: code34 nicolas_boiteux@yahoo.fr
-	Copyright (C) 2013-2016 Nicolas BOITEUX
+	Copyright (C) 2013-2018 Nicolas BOITEUX
 
 	CLASS OO_PDW -  Pesistent Data World
 	
@@ -25,6 +25,18 @@
 		
 	Parameters:
 		string - can be "inidbi" or "profile" 
+
+
+	--------------------------------------------------------------------------------------------------------------
+
+	Function: ["setSaveName", "nameofsave"] call _pdw;
+	Set the name of the save
+		
+	Parameters:
+		string -  name of the save
+	
+	Return : nothing
+
 
 	--------------------------------------------------------------------------------------------------------------
 
