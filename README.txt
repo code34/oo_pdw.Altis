@@ -1,6 +1,6 @@
 	/*
 	Author: code34 nicolas_boiteux@yahoo.fr
-	Copyright (C) 2013-2016 Nicolas BOITEUX
+	Copyright (C) 2013-2018 Nicolas BOITEUX
 
 	CLASS OO_PDW -  Pesistent Data World
 	
@@ -31,6 +31,11 @@
 	You can share, modify, distribute this script but don't remove the licence and the name of the original author
 
 	logs:
+		0.8	- fix private keywords
+			- fix array reference
+			- fix clearcargo
+			- add setSaveName method
+
 		0.76
 			- Add setIncludingMarkers method
 			- Add setExcludingMarkers method
