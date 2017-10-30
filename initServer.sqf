@@ -1,12 +1,16 @@
 ﻿		call compilefinal preprocessFileLineNumbers "oo_pdw.sqf";
 
-		 _pdw = ["new", "inidbi"] call OO_PDW;
+		sleep 2;
+
+		 _pdw = ["new", "profile"] call OO_PDW;
+		 ["setSaveName", missionName] call _pdw;
 		
 		 hint "save AI infantry groups";
 		 "saveGroups" call _pdw;
 		 sleep 2;
 
 		 {deletevehicle _x;} foreach allunits;
+		 sleep 1;
 
 		 hint "load AI infantry groups";
 		"loadGroups" call _pdw;
