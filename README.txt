@@ -23,7 +23,7 @@
 	Usage:
 		put the "oo_pdw.sqf" and the "oop.h" files in your mission directory
 		put this code into your mission init.sqf
-		call compilefinal preprocessFileLineNumbers "oo_pdw.sqf";
+		call compile preprocessFileLineNumbers "oo_pdw.sqf";
 
 	See example mission in directory: init.sqf
 	

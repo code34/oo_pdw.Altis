@@ -1,8 +1,8 @@
-﻿		call compilefinal preprocessFileLineNumbers "oo_pdw.sqf";
+﻿		call compile preprocessFileLineNumbers "oo_pdw.sqf";
 
 		sleep 2;
 
-		 _pdw = ["new", "profile"] call OO_PDW;
+		 private _pdw = ["new", "profile"] call OO_PDW;
 		 ["setSaveName", missionName] call _pdw;
 		
 		 hint "save AI infantry groups";
