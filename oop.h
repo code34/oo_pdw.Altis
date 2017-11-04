@@ -112,9 +112,8 @@
 //////////////////////////////////////////////////////////////
 //  Group: Internal Macros
 //////////////////////////////////////////////////////////////
-
 #define SAFE_VAR(var) (if (isNil {var}) then {nil} else {var})
-
+#define DEBUG(sharp,name) sharp##line 0 name
 #define ENSURE_INDEX(idx,dft) if ((count _this) <= idx) then {_this set [idx,dft]}
 #define CHECK_THIS if (isNil "_this") then {_this = []} else {if !(_this isEqualType []) then {_this = [_this]}}
 
