@@ -32,8 +32,8 @@
 		PRIVATE VARIABLE("string","savename");
 
 		PUBLIC FUNCTION("string","constructor") { 
-			private _drivername = toLower (param [0, "profile", [""]]);
-			
+			DEBUG(#, "OO_PDW::constructor")
+			private _drivername = toLower (param [0, "profile", [""]]);		
 			MEMBER("includingmarkers", []);
 			MEMBER("excludingmarkers", []);
 			MEMBER("aroundpos", []);
@@ -58,43 +58,22 @@
 			}
 		};
 
-		PUBLIC FUNCTION("string","setSaveName") {
-			MEMBER("savename", _this);
-		};
-
-		PUBLIC FUNCTION("","getSaveName") {
-			MEMBER("savename", nil);
-		};
+		PUBLIC FUNCTION("string","setSaveName") { MEMBER("savename", _this); };
+		PUBLIC FUNCTION("","getSaveName") { MEMBER("savename", nil); };
+		PUBLIC FUNCTION("array","setIncludingMarkers") { MEMBER("includingmarkers", _this); };
+		PUBLIC FUNCTION("array","setExcludingMarkers") { MEMBER("excludingmarkers", _this); };
+		PUBLIC FUNCTION("array","setAroundPos") { MEMBER("aroundpos", _this); };
+		PUBLIC FUNCTION("array","setExcludingTypes") { MEMBER("excludingtypes", _this); };
+		PUBLIC FUNCTION("array","setExcludingObjects") { MEMBER("excludingobjects", _this); };
+		PUBLIC FUNCTION("array","setIncludingObjects") { MEMBER("includingobjects", _this); };
 
 		PUBLIC FUNCTION("string","setDbName") {
-			["setDbName", _this] call MEMBER("driver", nil);
+			DEBUG(#, "OO_PDW::setDbName")
+			["setDbName", _this] call MEMBER("driver", nil); 
 		};
 
-		PUBLIC FUNCTION("array","setIncludingMarkers") {
-			MEMBER("includingmarkers", _this);
-		};
-
-		PUBLIC FUNCTION("array","setExcludingMarkers") {
-			MEMBER("excludingmarkers", _this);
-		};
-
-		PUBLIC FUNCTION("array","setAroundPos") {
-			MEMBER("aroundpos", _this);
-		};
-
-		PUBLIC FUNCTION("array","setExcludingTypes") {
-			MEMBER("excludingtypes", _this);
-		};
-
-		PUBLIC FUNCTION("array","setExcludingObjects") {
-			MEMBER("excludingobjects", _this);
-		};
-
-		PUBLIC FUNCTION("array","setIncludingObjects") {
-			MEMBER("includingobjects", _this);
-		};
-
-		PRIVATE FUNCTION("array","read") {	
+		PRIVATE FUNCTION("array","read") {
+			DEBUG(#, "OO_PDW::read")
 			private _key = param [0, "", [""]];
 			if(_key isEqualTo "") exitwith { MEMBER("ToLog", "PDW: write failed - label not defined"); false;};
 			_key = MEMBER("savename",nil) +_key;
@@ -104,54 +83,42 @@
 			private _drivername = MEMBER("drivername", nil);
 
 			switch (_drivername) do {
-				case "inidbi": {
-					_result = ["read", ["pdw", _key, _default]] call MEMBER("driver", nil);
-				};
-
-				case "profile": {
-					_result = profileNamespace getVariable _key;
-				};
-
-				default {
-					_result = false;
-				};
+				case "inidbi": { 	_result = ["read", ["pdw", _key, _default]] call MEMBER("driver", nil);	};
+				case "profile": { _result = profileNamespace getVariable _key;};
+				default { _result = false; };
 			};
 			_result;
 		};
 
 		PRIVATE FUNCTION("array","write") {
+			DEBUG(#, "OO_PDW::write")
 			private _key = param [0, "", [""]];
 			if(_key isEqualTo "") exitwith { MEMBER("ToLog", "PDW: write failed - label not defined"); false;};
 			_key = MEMBER("savename",nil) +_key;
-			
 			private _array = param [1, ""];
 			private _drivername = MEMBER("drivername", nil);
 			private _result = false;
 
 			switch (_drivername) do {
-				case "inidbi": {
-					_result = ["write", ["pdw", _key, _array]] call MEMBER("driver", nil);
-				};
-
+				case "inidbi": { _result = ["write", ["pdw", _key, _array]] call MEMBER("driver", nil); };
 				case "profile": {
 					profileNamespace setVariable [_key, _array];
 					saveProfileNamespace;
 					_result = true;
 				};
-
-				default {
-					_result = false;
-				};
+				default { _result = false; };
 			};
 			_result;
 		};		
 
 		PUBLIC FUNCTION("string","toLog") {
+			DEBUG(#, "OO_PDW::toLog")
 			hintc _this;
 			diag_log _this;
 		};
 
 		PUBLIC FUNCTION("object","clearInventory") {
+			DEBUG(#, "OO_PDW::clearInventory")
 			removeallweapons _this;
 			removeGoggles _this;
 			removeHeadgear _this;
@@ -162,6 +129,7 @@
 		};
 
 		PUBLIC FUNCTION("object","clearObject") {
+			DEBUG(#, "OO_PDW::clearObject")
 			clearWeaponCargoGlobal _this;
 			clearMagazineCargoGlobal _this;
 			clearItemCargoGlobal _this;
@@ -169,6 +137,7 @@
 		};
 
 		PUBLIC FUNCTION("","savePlayers") {
+			DEBUG(#, "OO_PDW::savePlayers")
 			{
 				if(alive _x) then {
 					["savePlayer", _x] call _pdw;
@@ -179,6 +148,7 @@
 		};
 
 		PUBLIC FUNCTION("","loadPlayers") {
+			DEBUG(#, "OO_PDW::loadPlayers")
 			{
 				if(alive _x) then {
 					["loadPlayer", _x] call _pdw;
@@ -188,7 +158,8 @@
 			}foreach allplayers;
 		};		
 
-		PUBLIC FUNCTION("","saveGroups") {	
+		PUBLIC FUNCTION("","saveGroups") {
+			DEBUG(#, "OO_PDW::saveGroups")
 			private _counter = -1;
 			private _counter2 = -1;
 			private _name = "";
@@ -218,7 +189,8 @@
 			MEMBER("write", _save);
 		};
 
-		PUBLIC FUNCTION("","loadGroups") {	
+		PUBLIC FUNCTION("","loadGroups") {
+			DEBUG(#, "OO_PDW::loadGroups")
 			private _save = ["pdw_groups", -1];
 			private _counter = MEMBER("read", _save);
 			private	_objects = [];
@@ -238,17 +210,9 @@
 				_units = _array select 1;
 
 				switch (_side) do {
-					case "CIV" : {
-						_group = creategroup civilian;
-					};
-
-					case "GUER" : {
-						_group = creategroup resistance;
-					};
-
-					default {
-						_group = call compile format ["creategroup %1;", _side];
-					};
+					case "CIV" : { _group = creategroup civilian; };
+ 					case "GUER" : {	_group = creategroup resistance; };
+					default { _group = call compile format ["creategroup %1;", _side]; };
 				};
 
 				{
@@ -274,6 +238,7 @@
 		Return : true if sucess
 		*/
 		PUBLIC FUNCTION("","saveObjects") {
+			DEBUG(#, "OO_PDW::saveObjects")
 			private _excludingtypes = MEMBER("excludingtypes", nil);
 			private _excludingobjects = MEMBER("excludingobjects", nil);
 			private _includingobjects = MEMBER("includingobjects", nil);
@@ -348,7 +313,8 @@
 		Parameters:  none
 		Return : array of objects
 		*/
-		PUBLIC FUNCTION("","loadObjects") {	
+		PUBLIC FUNCTION("","loadObjects") {
+			DEBUG(#, "OO_PDW::loadObjects")
 			private _save = ["pdw_objects", 0];
 			private _counter = MEMBER("read", _save);
 			private _name = "";
@@ -369,7 +335,8 @@
 			_this select 1 : _object : object to save
 		Return : true if sucess
 		*/
-		PUBLIC FUNCTION("array","saveObject") {		
+		PUBLIC FUNCTION("array","saveObject") {
+			DEBUG(#, "OO_PDW::saveObject")
 			private _label = param [0, "", [""]];
 			private _object = param [1, ""];
 
@@ -393,6 +360,7 @@
 		};
 
 		PUBLIC FUNCTION("string","loadObject") {	
+			DEBUG(#, "OO_PDW::loadObject")
 			private _name = _this;
 			if (isnil "_name") exitwith { MEMBER("ToLog", "PDW: require a object name to loadObject"); };
 			_name = "pdw_object_" + _name;
@@ -434,6 +402,7 @@
 		};
 
 		PUBLIC FUNCTION("object","savePlayer") {
+			DEBUG(#, "OO_PDW::savePlayer")
 			private _object = _this;
 			private _name = getPlayerUID _this;		
 			if (isnil "_name") exitwith { MEMBER("ToLog", "PDW: require a unit name to savePlayer"); };
@@ -443,6 +412,7 @@
 		};
 
 		PUBLIC FUNCTION("object","loadPlayer") {
+			DEBUG(#, "OO_PDW::loadPlayer")
 			private _name = getPlayerUID _this;
 			if (isnil "_name") exitwith { MEMBER("ToLog", "PDW: require a unit name to loadPlayer"); };
 			private _name = [format["pdw_unit_%1", getPlayerUID _this], []];
@@ -456,6 +426,7 @@
 		};
 
 		PUBLIC FUNCTION("array","saveUnit") {
+			DEBUG(#, "OO_PDW::saveUnit")
 			private _label = param [0, "", [""]];
 			if (_label isEqualTo "") exitwith { MEMBER("ToLog", "PDW: require a unit label to saveUnit");};
 			private _object = param [1, ""];
@@ -466,6 +437,7 @@
 		};
 
 		PUBLIC FUNCTION("array","loadUnit") {
+			DEBUG(#, "OO_PDW::loadUnit")
 			private _label = param [0, "", [""]];
 			if (_label isEqualTo "") exitwith { MEMBER("ToLog", "PDW: require a unit label to loadUnit");};
 			private _group = param [1, ""];
@@ -482,6 +454,7 @@
 		};
 
 		PUBLIC FUNCTION("array","saveInventory") {
+			DEBUG(#, "OO_PDW::saveInventory")
 			private _label = param [0, "", [""]];
 			private _object = param [1, ""];
 			
@@ -514,6 +487,7 @@
 		};
 
 		PUBLIC FUNCTION("array","loadInventory") {
+			DEBUG(#, "OO_PDW::loadInventory")
 			private _label = param [0, "", [""]];
 			private _object = param [1, ""];
 			
@@ -594,7 +568,6 @@
 				};
 			} foreach _secondaryweaponitems;
 	
-
 			_object addweapon _handgunweapon;
 	
 			{
@@ -614,6 +587,7 @@
 		};
 
 		PUBLIC FUNCTION("","deconstructor") { 
+			DEBUG(#, "OO_PDW::deconstructor")
 			DELETE_VARIABLE("drivername");
 			DELETE_VARIABLE("driver");
 			DELETE_VARIABLE("includingmarkers");
