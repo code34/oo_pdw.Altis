@@ -180,6 +180,7 @@
 		setExcludingMarkers
 		setAroundPos
 		setExcludingTypes
+		setIncludingTypes
 		setExcludingObjects
 		setIncludingObjects
 
@@ -218,6 +219,15 @@
 
 	Function: ["setExcludingTypes",  _array] call _pdw;
 	Set array of of objects type, dont have to be save. 
+	
+	Parameters: _array : array containing types of object ["B_Heli_Light_01_F"]
+
+	Return : none
+
+	--------------------------------------------------------------------------------------------------------------
+
+	Function: ["setIncludingTypes",  _array] call _pdw;
+	Set array of of objects type to whitelist
 	
 	Parameters: _array : array containing types of object ["B_Heli_Light_01_F"]
 
