@@ -27,17 +27,19 @@
 		PRIVATE VARIABLE("array","excludingmarkers");
 		PRIVATE VARIABLE("array","aroundpos");
 		PRIVATE VARIABLE("array","excludingtypes");
+		PRIVATE VARIABLE("array","includingtypes");
 		PRIVATE VARIABLE("array","excludingobjects");
 		PRIVATE VARIABLE("array","includingobjects");
 		PRIVATE VARIABLE("string","savename");
 
 		PUBLIC FUNCTION("string","constructor") { 
 			DEBUG(#, "OO_PDW::constructor")
-			private _drivername = toLower (param [0, "profile", [""]]);		
+			private _drivername = toLower (param [0, "profile", [""]]);
 			MEMBER("includingmarkers", []);
 			MEMBER("excludingmarkers", []);
 			MEMBER("aroundpos", []);
 			MEMBER("excludingtypes", []);
+			MEMBER("includingtypes", []);
 			MEMBER("excludingobjects", []);
 			MEMBER("includingobjects", []);
 			MEMBER("savename", "");
@@ -64,6 +66,7 @@
 		PUBLIC FUNCTION("array","setExcludingMarkers") { MEMBER("excludingmarkers", _this); };
 		PUBLIC FUNCTION("array","setAroundPos") { MEMBER("aroundpos", _this); };
 		PUBLIC FUNCTION("array","setExcludingTypes") { MEMBER("excludingtypes", _this); };
+		PUBLIC FUNCTION("array","setIncludingTypes") { MEMBER("includingtypes", _this); };
 		PUBLIC FUNCTION("array","setExcludingObjects") { MEMBER("excludingobjects", _this); };
 		PUBLIC FUNCTION("array","setIncludingObjects") { MEMBER("includingobjects", _this); };
 
@@ -240,6 +243,7 @@
 		PUBLIC FUNCTION("","saveObjects") {
 			DEBUG(#, "OO_PDW::saveObjects")
 			private _excludingtypes = MEMBER("excludingtypes", nil);
+			private _includingtypes = MEMBER("includingtypes", nil);
 			private _excludingobjects = MEMBER("excludingobjects", nil);
 			private _includingobjects = MEMBER("includingobjects", nil);
 			private _excludingmarkers = MEMBER("excludingmarkers", nil);
@@ -259,6 +263,7 @@
 				_include = false;
 
 				if((typeOf _object) in _excludingtypes) then {_exclude = true;};
+				if((typeOf _object) in _includingtypes) then {_include = true;};
 				if((_object isKindOf "MAN") or (_object isKindOf "LOGIC"))  then { _exclude = true;};
 				if(isnil "_object") then { _exclude = true;};
 
@@ -441,7 +446,7 @@
 			private _label = param [0, "", [""]];
 			if (_label isEqualTo "") exitwith { MEMBER("ToLog", "PDW: require a unit label to loadUnit");};
 			private _group = param [1, ""];
-			if (_group isEqualTo "") exitwith { MEMBER("ToLog", "PDW: require a unit group to loadUnit");};				
+			if (_group isEqualTo "") exitwith { MEMBER("ToLog", "PDW: require a unit group to loadUnit");};
 			_label = "pdw_unit_" + _label;
 			private _save = [_label, []];
 			_array = MEMBER("read", _save);
@@ -459,9 +464,9 @@
 			private _object = param [1, ""];
 			
 			if (_label isEqualTo "") exitwith { MEMBER("ToLog", "PDW: require an unit label to saveUnit");};
-			if (_object isEqualTo "") exitwith { MEMBER("ToLog", "PDW: require an unit ojbect to saveUnit");};				
+			if (_object isEqualTo "") exitwith { MEMBER("ToLog", "PDW: require an unit ojbect to saveUnit");};
 
-			_label = "pdw_inventory_" + _label;			
+			_label = "pdw_inventory_" + _label;
 
 			private _array = [
 				(headgear _object), 
@@ -494,7 +499,7 @@
 			if (_label isEqualTo "") exitwith { MEMBER("ToLog", "PDW: require a unit label to loadInventory");};
 			if (_object isEqualTo "") exitwith { MEMBER("ToLog", "PDW: require a unit object to loadInventory");};
 
-			_label = "pdw_inventory_" + _label;			
+			_label = "pdw_inventory_" + _label;
 
 			private _save = [_label, []];
 			private _array = MEMBER("read", _save);
@@ -529,13 +534,13 @@
 					_object addItemToUniform _x;
 				};
 			}foreach _uniformitems;
-	
+
 			{
 				if(!(_x isEqualTo "") and (_x isKindOf ["ItemCore", configFile >> "CfgWeapons"] )) then {
 					_object addItemToVest _x;
 				};
 			}foreach _vestitems;
-	
+
 			if!(_backpack isEqualTo "") then {
 				_object addbackpack _backpack;
 				{
@@ -544,7 +549,7 @@
 					};
 				} foreach _backpackitems;
 			};
-	
+
 			{
 				if!(_x isEqualTo "") then {
 					_object addMagazine [_x select 0, _x select 1];
@@ -553,7 +558,7 @@
 
 			//must be after assign items to secure loading mags
 			_object addweapon _primaryweapon;
-	
+
 			{
 				if!(_x isEqualTo "") then {
 					_object addPrimaryWeaponItem _x;
@@ -561,21 +566,21 @@
 			} foreach _primaryweaponitems;
 
 			_object addweapon _secondaryweapon;
-	
+
 			{
 				if!(_x isEqualTo "") then {
 					_object addSecondaryWeaponItem _x;
 				};
 			} foreach _secondaryweaponitems;
-	
+
 			_object addweapon _handgunweapon;
-	
+
 			{
 				if!(_x isEqualTo "") then {
 					_object addHandgunItem _x;
 				};
 			} foreach _handgunweaponitems;
-	
+
 			{
 				if!(_x isEqualTo "") then {
 					_object addweapon _x;
@@ -594,6 +599,7 @@
 			DELETE_VARIABLE("excludingmarkers");
 			DELETE_VARIABLE("aroundpos");
 			DELETE_VARIABLE("excludingtypes");
+			DELETE_VARIABLE("includingtypes");
 			DELETE_VARIABLE("excludingobjects");
 			DELETE_VARIABLE("includingobjects");
 		};
