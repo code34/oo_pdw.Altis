@@ -381,7 +381,7 @@
 			private _object = createVehicle [(_array select 0), (_array select 1), [], 0, "NONE"];
 			if (count _array > 8) then { _object enableSimulation (_array select 8);};
 
-			if (surfaceIsWater (_array select 1)) then { _object setPosASL (_array select 1); } else {	_object setPosATL (_array select 1); };
+			if (surfaceIsWater (_array select 1)) then { _object setPosASL (_array select 1); } else { _object setPosATL (_array select 1); };
 			_object setdir (_array select 2);
 			_object setdamage (_array select 3);
 			MEMBER("ClearObject", _object);
