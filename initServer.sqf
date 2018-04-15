@@ -4,7 +4,7 @@
 
 		 private _pdw = ["new", "profile"] call OO_PDW;
 		 ["setSaveName", missionName] call _pdw;
-		
+
 		 hint "save AI infantry groups";
 		 "saveGroups" call _pdw;
 		 sleep 2;
@@ -46,3 +46,9 @@
 		
 		_objects = "loadObjects" call _pdw;
 		hint format ["Restore all objects %1", _objects];
+		sleep 2;
+
+		["saveObject", ["sand", sand]] call _pdw;
+		deleteVehicle sand;
+		sand = ["loadObject", "sand"] call _pdw;
+		hint format["enableSimulation %1", simulationEnabled sand];
