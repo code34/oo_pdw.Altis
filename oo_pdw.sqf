@@ -357,14 +357,15 @@
 				(getWeaponCargo _object),
 				(getMagazineCargo _object),
 				(getItemCargo _object),
-				(getBackpackCargo _object)
+				(getBackpackCargo _object),
+				(simulationEnabled _object)
 				];
 			
 			private _save = [_label, _array];
 			MEMBER("write", _save);
 		};
 
-		PUBLIC FUNCTION("string","loadObject") {	
+		PUBLIC FUNCTION("string","loadObject") {
 			DEBUG(#, "OO_PDW::loadObject")
 			private _name = _this;
 			if (isnil "_name") exitwith { MEMBER("ToLog", "PDW: require a object name to loadObject"); };
@@ -375,6 +376,7 @@
 			if(_array isEqualTo []) exitWith {false;};
 
 			private _object = createVehicle [(_array select 0), (_array select 1), [], 0, "NONE"];
+			if (count _array > 8) then { _object enableSimulation (_array select 8);	};
 			_object setposatl (_array select 1);
 			_object setdir (_array select 2);
 			_object setdamage (_array select 3);
