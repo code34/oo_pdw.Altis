@@ -344,14 +344,17 @@
 			DEBUG(#, "OO_PDW::saveObject")
 			private _label = param [0, "", [""]];
 			private _object = param [1, ""];
+			private _position = [];
 
 			if (_label isEqualTo "") exitwith { MEMBER("ToLog", "PDW: require an object label to saveObject"); };
 			if (_object isEqualTo "") exitwith { MEMBER("ToLog", "PDW: require an object to saveObject"); };
 			_label = "pdw_object_" + _label;
 
+			if (surfaceIsWater (getpos _object)) then { _position = (getposASL _object); } else { _position = (getposATL _object); };
+
 			private _array = [
 				(typeof _object),
-				(getpos _object),
+				_position,
 				(getdir _object),
 				(getDammage _object),
 				(getWeaponCargo _object),
@@ -376,8 +379,9 @@
 			if(_array isEqualTo []) exitWith {false;};
 
 			private _object = createVehicle [(_array select 0), (_array select 1), [], 0, "NONE"];
-			if (count _array > 8) then { _object enableSimulation (_array select 8);	};
-			_object setposatl (_array select 1);
+			if (count _array > 8) then { _object enableSimulation (_array select 8);};
+
+			if (surfaceIsWater (_array select 1)) then { _object setPosASL (_array select 1); } else {	_object setPosATL (_array select 1); };
 			_object setdir (_array select 2);
 			_object setdamage (_array select 3);
 			MEMBER("ClearObject", _object);
