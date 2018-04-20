@@ -16,10 +16,10 @@ class EditorData
 	};
 	class Camera
 	{
-		pos[]={11540.584,47.963196,11657.228};
-		dir[]={-0.047354098,-0.45248893,0.89051604};
-		up[]={-0.024027906,0.89176899,0.45185205};
-		aside[]={0.99859202,1.2109922e-008,0.053101525};
+		pos[]={11527.061,26.761106,11722.117};
+		dir[]={0.53698301,-0.33509687,0.77419031};
+		up[]={0.19098353,0.94218069,0.2753489};
+		aside[]={0.8216958,1.119115e-007,-0.56993324};
 	};
 };
 binarizationWanted=0;
@@ -253,18 +253,19 @@ class Mission
 			dataType="Object";
 			class PositionInfo
 			{
-				position[]={11535.931,23.300352,11732.064};
-				angles[]={0.0039967569,0,6.2805333};
+				position[]={11535.93,23.300354,11732.064};
+				angles[]={0.0039968039,0,6.2805324};
 			};
 			side="Empty";
 			flags=4;
 			class Attributes
 			{
 				skill=0.60000002;
+				name="sand";
+				disableSimulation=1;
 			};
 			id=5;
 			type="Land_BagFence_Corner_F";
-			atlOffset=1.9073486e-006;
 		};
 		class Item6
 		{
@@ -405,7 +406,6 @@ class Mission
 			};
 			id=13;
 			type="B_G_Offroad_01_repair_F";
-			atlOffset=-1.9073486e-006;
 		};
 		class Item14
 		{
