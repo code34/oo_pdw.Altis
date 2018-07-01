@@ -28,6 +28,8 @@
 		PRIVATE VARIABLE("array","aroundpos");
 		PRIVATE VARIABLE("array","excludingtypes");
 		PRIVATE VARIABLE("array","includingtypes");
+		PRIVATE VARIABLE("array","excludingkindof");
+		PRIVATE VARIABLE("array","includingkindof");
 		PRIVATE VARIABLE("array","excludingobjects");
 		PRIVATE VARIABLE("array","includingobjects");
 		PRIVATE VARIABLE("string","savename");
@@ -40,6 +42,8 @@
 			MEMBER("aroundpos", []);
 			MEMBER("excludingtypes", []);
 			MEMBER("includingtypes", []);
+			MEMBER("excludingkindof", []);
+			MEMBER("includingkindof", []);
 			MEMBER("excludingobjects", []);
 			MEMBER("includingobjects", []);
 			MEMBER("savename", "");
@@ -67,6 +71,8 @@
 		PUBLIC FUNCTION("array","setAroundPos") { MEMBER("aroundpos", _this); };
 		PUBLIC FUNCTION("array","setExcludingTypes") { MEMBER("excludingtypes", _this); };
 		PUBLIC FUNCTION("array","setIncludingTypes") { MEMBER("includingtypes", _this); };
+		PUBLIC FUNCTION("array","setExcludingKindOf") { MEMBER("excludingkindof", _this); };
+		PUBLIC FUNCTION("array","setIncludingKindOf") { MEMBER("includingkindof", _this); };
 		PUBLIC FUNCTION("array","setExcludingObjects") { MEMBER("excludingobjects", _this); };
 		PUBLIC FUNCTION("array","setIncludingObjects") { MEMBER("includingobjects", _this); };
 
@@ -244,6 +250,8 @@
 			DEBUG(#, "OO_PDW::saveObjects")
 			private _excludingtypes = MEMBER("excludingtypes", nil);
 			private _includingtypes = MEMBER("includingtypes", nil);
+			private _excludingkindof = MEMBER("excludingkindof", nil);
+			private _includingkindof = MEMBER("includingkindof", nil);
 			private _excludingobjects = MEMBER("excludingobjects", nil);
 			private _includingobjects = MEMBER("includingobjects", nil);
 			private _excludingmarkers = MEMBER("excludingmarkers", nil);
@@ -263,15 +271,17 @@
 				_include = false;
 
 				if((typeOf _object) in _excludingtypes) then {_exclude = true;};
+				{ if (_object isKindOf _x) then { _exclude = true; }} count _excludingkindof;
 				if((typeOf _object) in _includingtypes) then {_include = true;};
-				if((_object isKindOf "MAN") or (_object isKindOf "LOGIC"))  then { _exclude = true;};
+				{ if (_object isKindOf _x) then { _include = true; }} count _includingkindof;
+				if((_object isKindOf "MAN") or (_object isKindOf "LOGIC")) then { _exclude = true;};
 				if(isnil "_object") then { _exclude = true;};
 
 				{
-					_position = getMarkerPos  _x;
+					_position = getMarkerPos _x;
 					_distancex = (getMarkerSize _x) select 0;
 					_distancey = (getMarkerSize _x) select 1;
-					_hypo =  sqrt ((_distancex ^ 2) + (_distancey ^ 2));
+					_hypo = sqrt ((_distancex ^ 2) + (_distancey ^ 2));
 					if(_object distance _position < _hypo) then { _exclude = true;};
 					sleep 0.0001;
 				}foreach _excludingmarkers;
@@ -606,6 +616,8 @@
 			DELETE_VARIABLE("aroundpos");
 			DELETE_VARIABLE("excludingtypes");
 			DELETE_VARIABLE("includingtypes");
+			DELETE_VARIABLE("excludingkindof");
+			DELETE_VARIABLE("includingkindof");
 			DELETE_VARIABLE("excludingobjects");
 			DELETE_VARIABLE("includingobjects");
 		};
