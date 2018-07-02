@@ -28,10 +28,10 @@
 		//_aroundpos = [[position player, 100], [position chopper, 10]];
 		//["setAroundPos", _aroundpos] call _pdw;
 		//["setExcludingTypes", ["B_Heli_Light_01_F"]] call _pdw;
-		//["setIncludingTypes", ["B_Heli_Light_01_F"]] call _pdw;
+		//["setIncludingTypes", ["B_G_Offroad_01_repair_F"]] call _pdw;
 		//["setExcludingMarkers", ["test1", "test2"]] call _pdw;
-		//["setIncludingKindOf", ["Air"]] call _pdw;
-		//["setExcludingKindOf", ["Air"]] call _pdw;
+		//["setIncludingKindOf", ["Car"]] call _pdw;
+		//["setExcludingKindOf", ["Car"]] call _pdw;
 
 		hint "Save all objects";
 		"saveObjects" call _pdw;

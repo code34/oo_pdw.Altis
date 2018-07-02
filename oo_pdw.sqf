@@ -270,10 +270,10 @@
 				_exclude = false;
 				_include = false;
 
+				{ if (_object isKindOf _x) then { _exclude = true;}; true;} count _excludingkindof;
+				{ if (_object isKindOf _x) then { _include = true;}; true;} count _includingkindof;
 				if((typeOf _object) in _excludingtypes) then {_exclude = true;};
-				{ if (_object isKindOf _x) then { _exclude = true; }} count _excludingkindof;
 				if((typeOf _object) in _includingtypes) then {_include = true;};
-				{ if (_object isKindOf _x) then { _include = true; }} count _includingkindof;
 				if((_object isKindOf "MAN") or (_object isKindOf "LOGIC")) then { _exclude = true;};
 				if(isnil "_object") then { _exclude = true;};
 
@@ -302,7 +302,7 @@
 					sleep 0.0001;
 				}foreach _aroundpos;
 
-				if(_include) then { _includingobjects pushBack _object;	};
+				if(_include) then { _includingobjects pushBack _object;};
 				if(_exclude) then {_excludingobjects pushBack _object;};
 			}foreach _objects;
 
