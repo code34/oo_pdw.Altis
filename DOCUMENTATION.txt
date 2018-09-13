@@ -68,12 +68,13 @@
 	Return : True if success
 	--------------------------------------------------------------------------------------------------------------
 
-	Function: _bool = ["saveUnit", _unit] call _pdw;
+	Function: _bool = ["saveUnit", [_label,_unit]] call _pdw;
 	Save unit : type, position, damage, dir
 		
 	Parameters:
+		_label : string label of the unit
 		_unit - unit object (MAN unit)
-	
+
 	Return : True if success
 	--------------------------------------------------------------------------------------------------------------
 	
