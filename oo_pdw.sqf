@@ -252,8 +252,8 @@
 			private _includingtypes = MEMBER("includingtypes", nil);
 			private _excludingkindof = MEMBER("excludingkindof", nil);
 			private _includingkindof = MEMBER("includingkindof", nil);
-			private _excludingobjects = MEMBER("excludingobjects", nil);
-			private _includingobjects = MEMBER("includingobjects", nil);
+			private _excludingobjects = +MEMBER("excludingobjects", nil);
+			private _includingobjects = +MEMBER("includingobjects", nil);
 			private _excludingmarkers = MEMBER("excludingmarkers", nil);
 			private _includingmarkers = MEMBER("includingmarkers", nil);
 			private _aroundpos = MEMBER("aroundpos", nil);
