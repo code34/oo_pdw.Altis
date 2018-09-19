@@ -31,6 +31,8 @@
 	You can share, modify, distribute this script but don't remove the licence and the name of the original author
 
 	logs:
+		0.91 - fix including / excluding objects (duplicate objects)
+
 		0.9	- update oop.h
 			- add setIncludingTypes method from contributor: [LTC] Vegas =21st=
 			- add debug entry points
