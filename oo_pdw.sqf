@@ -371,7 +371,8 @@
 				(getMagazineCargo _object),
 				(getItemCargo _object),
 				(getBackpackCargo _object),
-				(simulationEnabled _object)
+				(simulationEnabled _object),
+				(isSimpleObject _object)
 				];
 			
 			private _save = [_label, _array];
@@ -385,10 +386,17 @@
 			_name = "pdw_object_" + _name;
 
 			private _save = [_name, []];
+			private _object = objNull;
+
 			_array = MEMBER("read", _save);
 			if(_array isEqualTo []) exitWith {false;};
 
-			private _object = createVehicle [(_array select 0), (_array select 1), [], 0, "NONE"];
+			if ((count _array > 9) && (_array select 9)) then {
+				_object = createSimpleObject [(_array select 0), (_array select 1)];
+				_object setpos (_array select 1);
+			} else {
+				_object = createVehicle [(_array select 0), (_array select 1), [], 0, "NONE"];
+			};
 			if (count _array > 8) then { _object enableSimulation (_array select 8);};
 
 			if (surfaceIsWater (_array select 1)) then { _object setPosASL (_array select 1); } else { _object setPosATL (_array select 1); };
